@@ -38,10 +38,10 @@ export class Main {
       }),
     )
     .subscribe({
-      next: (entry) => {
+      /*next: (entry) => {
         this._optimistic.set(0);
         // TODO: Need to refresh the data from backend - websocket ?
-      },
+      },*/
       error: (err) => console.error('Errore durante il flush:', err),
     });
 
