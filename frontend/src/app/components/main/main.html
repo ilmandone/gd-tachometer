@@ -7,11 +7,11 @@
         <img [ngSrc]="'/vectors/god.svg'" alt="sun" width="64" height="64">
         <img [ngSrc]="'/vectors/dog.svg'" alt="moon" width="64" height="64">
     </div>
-    <button app>+</button>
+    <button app (click)="update()">+</button>
     <div class="legend">
         <p>Press the button or ENTER key to add a random D or C</p>
         <p>Use D or C to be more specific.</p>
-    </div>      
-        
-    
+    </div>
+
+
 </div>
