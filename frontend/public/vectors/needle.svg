@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Needle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #c1272d;
+      }
+
+      .cls-2 {
+        fill: #1a1a1a;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M328,310h-16l3.95,306c.03,2.22,1.83,4,4.05,4h0c2.22,0,4.02-1.78,4.05-4l3.95-306Z"/>
+  <circle class="cls-2" cx="320" cy="320" r="32"/>
+</svg>

@@ -1,0 +1,17 @@
+<app-tachometer [current]="current()" [max]="max()"></app-tachometer>
+
+<div class="info">
+    <p class="day">{{day()}}</p>
+    <p class="current">{{ current() }}</p>
+    <div class="icons">
+        <img [ngSrc]="'/vectors/god.svg'" alt="sun" width="64" height="64">
+        <img [ngSrc]="'/vectors/dog.svg'" alt="moon" width="64" height="64">
+    </div>
+    <button app>+</button>
+    <div class="legend">
+        <p>Press the button or ENTER key to add a random D or C</p>
+        <p>Use D or C to be more specific.</p>
+    </div>      
+        
+    
+</div>

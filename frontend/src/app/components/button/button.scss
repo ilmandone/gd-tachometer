@@ -1,0 +1,26 @@
+@use '../../../styles/fonts.scss' as f;
+
+:host {
+    min-width: 6rem;
+
+    background: #020202;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    @include f.getFF(800, -0.05rem);
+
+    &:hover {
+        background: #c00909;
+    }
+
+    &:active {
+        filter: brightness(0.85);
+    }
+}

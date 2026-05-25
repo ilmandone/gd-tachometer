@@ -1,0 +1,15 @@
+@let current_ = current();
+@let max_ = max();
+
+<img [ngSrc]="'/vectors/small_ticks.svg'" alt="tick" width="640" height="640" priority>
+<img [ngSrc]="'/vectors/main_ticks.svg'" alt="tick" width="640" height="640"/>
+<img 
+    class="needle"
+    [class.over-rpm]="current_ > max_"
+    [ngSrc]="'/vectors/needle.svg'" 
+    [ngStyle]="{'transform': current_ <= max_ ? `rotate(${rotation()}deg)` : null}"
+    alt="tick" 
+    
+    width="640" 
+    height="640"/>
+<span class="label">x10 DC/day</span>

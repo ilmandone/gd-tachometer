@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+@use "./styles/fonts.scss" as f;
+
+@use "./styles/reset.scss";
+
+body {
+  @include f.getFF;
+}
