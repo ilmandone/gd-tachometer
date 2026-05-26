@@ -7,7 +7,7 @@
         <img [class.bright]="godBright()" [ngSrc]="'/vectors/god.svg'" alt="sun" width="72" height="72">
         <img [class.bright]="dogBright()" [ngSrc]="'/vectors/dog.svg'" alt="moon" width="72" height="72">
     </div>
-    <button app (click)="update()">+</button>
+    <button app (mousedown)="update()">+</button>
     <div class="legend">
         <p>Press the button or ENTER key to add a random G or D</p>
         <p>Use G or D to be more specific.</p>

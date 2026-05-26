@@ -65,9 +65,9 @@ export class Main {
     }
     
     this.update();
-
   }
 
+  @HostListener('window:mouseup')
   @HostListener('window:keyup.enter')
   onEnterUp() {
     this.godBright.set(false);
