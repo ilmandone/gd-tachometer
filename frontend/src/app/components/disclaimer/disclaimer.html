@@ -1,0 +1,18 @@
+<button app variant="secondary" (click)="showDisclaimer.set(true)">Disclaimer</button>
+
+@if(showDisclaimer()) {
+  <div class="overlay" (click)="showDisclaimer.set(false)"></div>
+  <section class="modal">
+    <header>
+      <h2>Hello!</h2>
+      <button app variant="secondary" class="close" (click)="showDisclaimer.set(false)">Close</button>
+    </header>
+
+    <p><strong> GD Tachometer</strong> is a tongue-in-cheek counter for involuntary invocations of a deity (<strong>G</strong>) or a dog (<strong>D</strong>) during particularly demanding workdays. </p>
+    <p>Because sometimes the best stress thermometer is counting how many times you said something you wouldn't say in front of children.</p>
+    <p>The tachometer tracks daily counts and automatically sets the next day's limit based on the previous day's total — so you can monitor the trajectory of your inner peace over time.</p>
+
+
+  </section>
+
+}

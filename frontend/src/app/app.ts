@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { CounterService } from './services/counter.service';
 import { Main } from './components/main/main';
+import { Footer } from './components/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [Main],
+  imports: [Main, Footer],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
