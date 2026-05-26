@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { buttonType } from './button.types';
 
 @Component({
   selector: 'button [app]',
@@ -6,6 +7,11 @@ import { Component } from '@angular/core';
   template: `    
       <ng-content></ng-content>    
   `,
-  styleUrl: './button.scss'
+  styleUrl: './button.scss',
+  host: {
+    '[class]': "variant()",
+  },
 })
-export class Button {}
+export class Button {
+  variant = input<buttonType>('primary');
+}

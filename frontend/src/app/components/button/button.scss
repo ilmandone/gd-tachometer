@@ -3,8 +3,6 @@
 :host {
     min-width: 6rem;
 
-    background: #020202;
-    color: white;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
 
@@ -12,15 +10,39 @@
     align-items: center;
     justify-content: center;
 
-    font-size: 1.25rem;
-    line-height: 1.25rem;
-    @include f.getFF(800, -0.05rem);
+    &.primary {
+        background: #020202;
+        color: white;
 
-    &:hover {
-        background: #c00909;
+        font-size: 1.25rem;
+        line-height: 1.25rem;
+
+        @include f.getFF(800, -0.05rem);
+
+        &:hover {
+            background: #c00909;
+        }
+
+        &:active {
+            filter: brightness(0.85);
+        }
     }
 
-    &:active {
-        filter: brightness(0.85);
+    &.secondary {
+        font-size: 0.875rem;
+        line-height: 0.875rem;
+
+        color: #c00909;
+
+        @include f.getFF(600, -0.05rem);
+
+        &:hover {
+            color: #590e0e;
+            text-decoration: underline;
+        }
+
+        &:active {
+            filter: brightness(1.5);
+        }
     }
 }
