@@ -1,12 +1,11 @@
 @let current_ = current();
 @let max_ = max();
+@let values_ = values();
 
-<img [ngSrc]="'/vectors/small_ticks.svg'" alt="tick" width="640" height="640" priority>
-<!-- <img [ngSrc]="'/vectors/main_ticks.svg'" alt="tick" width="640" height="640"/> -->
- @let values_ = values();
+<img ngSrc="/vectors/small_ticks.svg" alt="tick" width="640" height="640" priority>
 
- <svg id="Main_indicators" data-name="Main indicators" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
- 
+<svg id="Main_indicators" data-name="Main indicators" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+
   <rect class="cls-2" x="316" y="556" width="8" height="54" rx="3" ry="3"/>
 
   <rect class="cls-3" x="314" y="590" width="12" height="45"/>
@@ -20,7 +19,7 @@
 
   <rect class="cls-3" x="48" y="293" width="16" height="34" transform="translate(348 263) rotate(90)"/>
   <text class="cls-text cls-text-left" transform="translate(45 328)">{{ values_[1] }}</text>
-  
+
   <rect class="cls-2" x="65.87" y="211.73" width="8" height="54" rx="3" ry="3" transform="translate(318.51 246.05) rotate(108)"/>
   <rect class="cls-2" x="103.23" y="138.41" width="8" height="54" rx="3" ry="3" transform="translate(304.08 175.89) rotate(126)"/>
   <rect class="cls-2" x="161.41" y="80.23" width="8" height="54" rx="3" ry="3" transform="translate(362.26 96.75) rotate(144)"/>
@@ -29,19 +28,20 @@
 
   <rect class="cls-3" x="314" y="30" width="12" height="34" transform="translate(640 82) rotate(180)"/>
   <text class="cls-text cls-text-center" transform="translate(319 40)">{{ values_[2] }}</text>
-  
+
   <rect class="cls-1" x="397.27" y="42.87" width="8" height="54" rx="3" ry="3" transform="translate(761.31 260.32) rotate(-162)"/>
   <rect class="cls-1" x="470.59" y="80.23" width="8" height="54" rx="3" ry="3" transform="translate(795.51 472.93) rotate(-144)"/>
 
   <text class="cls-1 cls-text" transform="translate(500 80)" font-size="1.5rem" font-family="Arial-BoldMT, Arial" font-weight="700">{{ values_[3] }}</text>
 </svg>
-<img 
+
+<img
     class="needle"
     [class.over-rpm]="current_ > max_"
-    [ngSrc]="'/vectors/needle.svg'" 
-    [ngStyle]="{'transform': current_ <= max_ ? `rotate(${rotation()}deg)` : null}"
-    alt="tick" 
-    
-    width="640" 
-    height="640"/>
+    ngSrc="/vectors/needle.svg"
+    [style.transform]="current_ <= max_ ? 'rotate(' + rotation() + 'deg)' : null"
+    alt="needle"
+    width="640"
+    height="640">
+
 <span class="label">x10 GD/day</span>

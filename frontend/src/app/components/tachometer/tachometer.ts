@@ -1,32 +1,35 @@
-import { NgOptimizedImage, NgStyle } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
+
+const GAUGE_ARC_DEG = 216;
+const LEFT_MARK_RATIO = 90 / GAUGE_ARC_DEG;
+const TOP_MARK_RATIO = 180 / GAUGE_ARC_DEG;
 
 @Component({
   selector: 'app-tachometer',
-  imports: [NgOptimizedImage, NgStyle],
+  imports: [NgOptimizedImage],
   templateUrl: './tachometer.html',
   styleUrl: './tachometer.scss',
 })
 export class Tachometer {
-  current = input.required<number>();
-  max = input.required<number>();
-  rotation = computed(() => {
-    const current = this.current();
-    const max = this.max();
+  readonly current = input.required<number>();
+  readonly max = input.required<number>();
 
-    if(current && max) {
-      const ratio = current / max;      
-      return Math.round(ratio * 216);
-    }
-    
-    return 0;
+  readonly rotation = computed(() => {
+    const max = this.max();
+    if (max <= 0) return 0;
+    return Math.round((this.current() / max) * GAUGE_ARC_DEG);
   });
 
-  values = computed(() => {
+  readonly values = computed(() => {
     const max = this.max();
-    if(max) {
-      return [0, Math.round(max * 0.42 /10), Math.round(max * 0.84 /10), Math.round(max / 10)];
-    }
-    return [0, 42, 84, 100];
+    if (max <= 0) return [0, 42, 84, 100];
+    const tick = max / 10;
+    return [
+      0,
+      Math.round(tick * LEFT_MARK_RATIO),
+      Math.round(tick * TOP_MARK_RATIO),
+      Math.round(tick),
+    ];
   });
 }
