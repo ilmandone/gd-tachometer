@@ -25,7 +25,7 @@ export class Tachometer {
   values = computed(() => {
     const max = this.max();
     if(max) {
-      return [0, Math.round(max * 0.42 /10), Math.round(max * 0.84 /10), max / 10];
+      return [0, Math.round(max * 0.42 /10), Math.round(max * 0.84 /10), Math.round(max / 10)];
     }
     return [0, 42, 84, 100];
   });
