@@ -119,9 +119,6 @@ export class Main {
     this._update(newValue);
   }
   
-
-  
-
   //#region Privates
 
   private _update(value: ValueType): void {

@@ -10,6 +10,7 @@
     max-width: 640px;
     max-height: 640px;
     
+    svg,
     img:not(:first-child) {
         position: absolute;
         top: 0;
@@ -34,6 +35,11 @@
         transition: transform 100ms ease-out;        
         pointer-events: none;
         z-index: 1;
+    }
+
+    .index {
+        font-size: 1.5rem;
+        @include f.getFF(600, -0.05rem);
     }
 }
 
