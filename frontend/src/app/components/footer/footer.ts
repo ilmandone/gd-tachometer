@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Button } from '../button/button';
+import { Disclaimer } from '../disclaimer/disclaimer';
 
 @Component({
   selector: 'footer [app]',
-  imports: [Button],
+  imports: [Disclaimer],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
 })
