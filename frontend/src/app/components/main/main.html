@@ -4,8 +4,8 @@
     <p class="day">{{day()}}</p>
     <p class="current">{{ current() }}</p>
     <div class="icons">
-        <img [class.bright]="godBright()" [ngSrc]="'/vectors/god.svg'" alt="sun" width="72" height="72">
-        <img [class.bright]="dogBright()" [ngSrc]="'/vectors/dog.svg'" alt="moon" width="72" height="72">
+        <img [class.bright]="godBright()" ngSrc="/vectors/god.svg" alt="sun" width="72" height="72">
+        <img [class.bright]="dogBright()" ngSrc="/vectors/dog.svg" alt="moon" width="72" height="72">
     </div>
     <button app (mousedown)="update()">+</button>
     <div class="legend">

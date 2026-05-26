@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { Tachometer } from '../tachometer/tachometer';
 import { NgOptimizedImage } from '@angular/common';
 import { Button } from '../button/button';
@@ -16,148 +16,119 @@ import { SocketService } from '../../services/socket.service';
 })
 export class Main {
   private readonly INTERACTION_DEBOUNCE = 600;
-
-  private _counterService = inject(CounterService);
-  private _socketService = inject(SocketService);
-  private _destroyRef = inject(DestroyRef);
+  private readonly _counterService = inject(CounterService);
+  private readonly _socketService = inject(SocketService);
 
   private _lastValue: ValueType = 'god';
   private _newValue: Record<ValueType, number> = { god: 0, dog: 0 };
-  private _optimistic = signal<number>(0);
-  private _serverData = signal<CounterEntry | undefined>(undefined);
+  private readonly _optimistic = signal(0);
+  private readonly _serverData = signal<CounterEntry | undefined>(undefined);
 
-  private _soundDog = this._createAudioElement('/sounds/dog.mp3');
-  private _soundGod = this._createAudioElement('/sounds/god.mp3');
+  private readonly _sounds: Record<ValueType, HTMLAudioElement> = {
+    god: this._createAudioElement('/sounds/god.mp3'),
+    dog: this._createAudioElement('/sounds/dog.mp3'),
+  };
 
-  private _flush$ = new Subject<void>();
-  private _flushSub = this._flush$
-    .pipe(
-      debounceTime(this.INTERACTION_DEBOUNCE),
-      switchMap(() => {
-        const server = this._serverData();
-        const payload = {
-          god: (server?.god ?? 0) + this._newValue.god,
-          dog: (server?.dog ?? 0) + this._newValue.dog,
-        };
-        this._newValue = { god: 0, dog: 0 };
-        return this._counterService.update(payload.god, payload.dog);
-      }),
-    )
-    .subscribe({
-      error: (err) => console.error('Errore durante il flush:', err),
-    });
+  private readonly _flush$ = new Subject<void>();
 
-  current = computed(() => {
+  readonly current = computed(() => {
     const server = this._serverData();
-    const base = server ? server.god + server.dog : 0;
-    return base + this._optimistic();
+    return (server ? server.god + server.dog : 0) + this._optimistic();
   });
-  day = computed(() => this._serverData()?.date ?? '01/01/1970');
-  max = computed(() => this._serverData()?.limit ?? 100);
+  readonly day = computed(() => this._serverData()?.date ?? '');
+  readonly max = computed(() => this._serverData()?.limit ?? 100);
 
-  dogBright = signal(false);
-  godBright = signal(false);
+  readonly godBright = signal(false);
+  readonly dogBright = signal(false);
 
-  @HostListener('window:keydown.enter', ['$event'])
-  onEnter(event: Event) {
-    if((event as KeyboardEvent).repeat) {
-      return;
-    }
-    
-    this.update();
-  }
-
-  @HostListener('window:mouseup')
-  @HostListener('window:keyup.enter')
-  onEnterUp() {
-    this.godBright.set(false);
-    this.dogBright.set(false);
-  }
-
-  @HostListener('window:keydown.d', ['$event'])
-  onD(event: Event) {
-    if((event as KeyboardEvent).repeat) {
-      return;
-    }
-    this.update('dog');
-    
-  }
-
-  @HostListener('window:keydown.g', ['$event'])
-  onC(event: Event) {
-    if((event as KeyboardEvent).repeat) {
-      return;
-    }
-    this.update('god');
-    
-  }
-
-  @HostListener('window:keyup.d')
-  onDUp() {
-    this.dogBright.set(false);
-  }
-
-  @HostListener('window:keyup.g')
-  onCUp() {
-    this.godBright.set(false);
-  }
+  // Must be declared after godBright/dogBright (field initializer order)
+  private readonly _bright: Record<ValueType, WritableSignal<boolean>> = {
+    god: this.godBright,
+    dog: this.dogBright,
+  };
 
   constructor() {
     this._counterService.getToday()
-      .pipe(takeUntilDestroyed(this._destroyRef))
+      .pipe(takeUntilDestroyed())
       .subscribe((entry) => this._serverData.set(entry));
 
     this._socketService.on<CounterEntry>('counter:updated')
-      .pipe(takeUntilDestroyed(this._destroyRef))
+      .pipe(takeUntilDestroyed())
       .subscribe((entry) => {
         this._serverData.set(entry);
         this._optimistic.set(0);
         this._newValue = { god: 0, dog: 0 };
       });
 
-    this._destroyRef.onDestroy(() => this._flushSub.unsubscribe());
+    this._flush$
+      .pipe(
+        debounceTime(this.INTERACTION_DEBOUNCE),
+        switchMap(() => {
+          const server = this._serverData();
+          const payload = {
+            god: (server?.god ?? 0) + this._newValue.god,
+            dog: (server?.dog ?? 0) + this._newValue.dog,
+          };
+          this._newValue = { god: 0, dog: 0 };
+          return this._counterService.update(payload.god, payload.dog);
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe({
+        error: (err) => console.error('Flush error:', err),
+      });
+  }
+
+  @HostListener('window:keydown.enter', ['$event'])
+  onKeyEnter(event: Event) {
+    if ((event as KeyboardEvent).repeat) return;
+    this.update();
+  }
+
+  @HostListener('window:keydown.d', ['$event'])
+  onKeyD(event: Event) {
+    if ((event as KeyboardEvent).repeat) return;
+    this.update('dog');
+  }
+
+  @HostListener('window:keydown.g', ['$event'])
+  onKeyG(event: Event) {
+    if ((event as KeyboardEvent).repeat) return;
+    this.update('god');
+  }
+
+  @HostListener('window:mouseup')
+  @HostListener('window:keyup.enter')
+  @HostListener('window:keyup.d')
+  @HostListener('window:keyup.g')
+  onKeyUp() {
+    this.godBright.set(false);
+    this.dogBright.set(false);
   }
 
   protected update(value?: ValueType) {
-    const newValue = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
-
-    this._lastValue = newValue;
-    this._update(newValue);
-    
-    if(newValue === 'god') {
-      this._playSound(this._soundGod);
-      this.godBright.set(true);
-    } else {
-      this._playSound(this._soundDog);
-      this.dogBright.set(true);
-    }
-  }
-  
-  //#region Privates
-
-  private _update(value: ValueType): void {
-    this._newValue[value] += 1;
+    const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
+    this._lastValue = next;
+    this._newValue[next] += 1;
     this._optimistic.update((v) => v + 1);
     this._flush$.next();
+    this._playSound(this._sounds[next]);
+    this._bright[next].set(true);
   }
 
   private _createAudioElement(src: string): HTMLAudioElement {
     const audio = new Audio();
-    const srcElement = document.createElement('source');
-
-    srcElement.src = src;
-    srcElement.type = 'audio/mpeg';
-    audio.appendChild(srcElement);
+    const source = document.createElement('source');
+    source.src = src;
+    source.type = 'audio/mpeg';
+    audio.appendChild(source);
     audio.load();
-    
     return audio;
   }
 
-  private _playSound(audio: HTMLAudioElement) {
+  private _playSound(audio: HTMLAudioElement): void {
     audio.pause();
     audio.currentTime = 0;
     audio.play();
   }
-
-  //#endregion
 }
