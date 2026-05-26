@@ -10,7 +10,6 @@ import { Component, computed, input } from '@angular/core';
 export class Tachometer {
   current = input.required<number>();
   max = input.required<number>();
-
   rotation = computed(() => {
     const current = this.current();
     const max = this.max();
@@ -21,5 +20,13 @@ export class Tachometer {
     }
     
     return 0;
+  });
+
+  values = computed(() => {
+    const max = this.max();
+    if(max) {
+      return [0, Math.round(max * 0.42 /10), Math.round(max * 0.84 /10), max / 10];
+    }
+    return [0, 42, 84, 100];
   });
 }
