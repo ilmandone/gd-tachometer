@@ -1,1 +1,1 @@
-export const DEFAULT_LIMIT: number = 1000;
+export const DEFAULT_LIMIT: number = 200;

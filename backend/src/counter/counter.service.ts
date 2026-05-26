@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CounterEntry } from './counter.entity';
 import { Repository } from 'typeorm';
+import { DEFAULT_LIMIT } from './counter.utils';
 
 @Injectable()
 export class CounterService {
@@ -25,8 +26,23 @@ export class CounterService {
       where: { date: today },
     });
     if (!exists) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      const yesterdayString = yesterday.toISOString().split('T')[0];
+      const yesterdayEntry = await this.counterRepository.findOne({
+        where: { date: yesterdayString },
+      });
+
+      const limitCandidate = yesterdayEntry
+        ? yesterdayEntry.god + yesterdayEntry.dog
+        : 0;
+
+      const limit =
+        limitCandidate < DEFAULT_LIMIT ? DEFAULT_LIMIT : limitCandidate;
+
       await this.counterRepository.save(
-        this.counterRepository.create({ date: today, god: 0, dog: 0 }),
+        this.counterRepository.create({ date: today, god: 0, dog: 0, limit }),
       );
     }
   }
