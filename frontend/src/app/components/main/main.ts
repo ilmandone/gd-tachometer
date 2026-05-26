@@ -2,10 +2,11 @@ import { Component, computed, DestroyRef, HostListener, inject, signal } from '@
 import { Tachometer } from '../tachometer/tachometer';
 import { NgOptimizedImage } from '@angular/common';
 import { Button } from '../button/button';
-import { CounterService } from '../../services/counter.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, of, Subject, switchMap } from 'rxjs';
+import { CounterEntry, CounterService } from '../../services/counter.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, Subject, switchMap } from 'rxjs';
 import { ValueType } from './main.utils';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-main',
@@ -17,43 +18,40 @@ export class Main {
   private readonly INTERACTION_DEBOUNCE = 600;
 
   private _counterService = inject(CounterService);
+  private _socketService = inject(SocketService);
   private _destroyRef = inject(DestroyRef);
 
   private _lastValue: ValueType = 'god';
-  private _newValue: Record<ValueType, number> = {
-    god: 0,
-    dog: 0,
-  };
+  private _newValue: Record<ValueType, number> = { god: 0, dog: 0 };
   private _optimistic = signal<number>(0);
-  private _todayData = toSignal(this._counterService.getToday());
+  private _serverData = signal<CounterEntry | undefined>(undefined);
 
   private _flush$ = new Subject<void>();
   private _flushSub = this._flush$
     .pipe(
       debounceTime(this.INTERACTION_DEBOUNCE),
       switchMap(() => {
-        const { god, dog } = this._newValue;
+        const server = this._serverData();
+        const payload = {
+          god: (server?.god ?? 0) + this._newValue.god,
+          dog: (server?.dog ?? 0) + this._newValue.dog,
+        };
         this._newValue = { god: 0, dog: 0 };
-        return of([])
-        return this._counterService.update(god, dog);
+        return this._counterService.update(payload.god, payload.dog);
       }),
     )
     .subscribe({
-      /*next: (entry) => {
-        this._optimistic.set(0);
-        // TODO: Need to refresh the data from backend - websocket ?
-      },*/
       error: (err) => console.error('Errore durante il flush:', err),
     });
 
   current = computed(() => {
-    const todayData = this._todayData();
-    const base = todayData ? todayData.god + todayData.dog : 0;
+    const server = this._serverData();
+    const base = server ? server.god + server.dog : 0;
     return base + this._optimistic();
   });
 
-  day = computed(() => this._todayData()?.date ?? '01/01/1970');
-  max = computed(() => this._todayData()?.limit ?? 100);
+  day = computed(() => this._serverData()?.date ?? '01/01/1970');
+  max = computed(() => this._serverData()?.limit ?? 100);
 
   dogBright = signal(false);
   godBright = signal(false);
@@ -97,9 +95,19 @@ export class Main {
   }
 
   constructor() {
-    this._destroyRef.onDestroy(() => {
-      this._flushSub?.unsubscribe();
-    });
+    this._counterService.getToday()
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((entry) => this._serverData.set(entry));
+
+    this._socketService.on<CounterEntry>('counter:updated')
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((entry) => {
+        this._serverData.set(entry);
+        this._optimistic.set(0);
+        this._newValue = { god: 0, dog: 0 };
+      });
+
+    this._destroyRef.onDestroy(() => this._flushSub.unsubscribe());
   }
 
   protected update(value?: ValueType) {
