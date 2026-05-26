@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, HttpCode } from '@nestjs/common';
 import { CounterService } from './counter.service';
+import { CounterGateway } from './counter.gateway';
 
 class UpdateCounterDto {
   god!: number;
@@ -8,9 +9,11 @@ class UpdateCounterDto {
 
 @Controller('api/counter')
 export class CounterController {
-  constructor(private readonly counterService: CounterService) {}
+  constructor(
+    private readonly counterService: CounterService,
+    private readonly counterGateway: CounterGateway,
+  ) {}
 
-  // GET /api/counter/today
   @Get('today')
   async getToday() {
     const entry = await this.counterService.getToday();
@@ -24,16 +27,16 @@ export class CounterController {
     );
   }
 
-  // GET /api/counter/all
   @Get('all')
   async getAll() {
     return this.counterService.getAll();
   }
 
-  // POST /api/counter
   @Post()
   @HttpCode(200)
   async update(@Body() dto: UpdateCounterDto) {
-    return this.counterService.upsertToday(dto.god, dto.dog);
+    const entry = await this.counterService.upsertToday(dto.god, dto.dog);
+    this.counterGateway.emitCounterUpdated(entry);
+    return entry;
   }
 }
