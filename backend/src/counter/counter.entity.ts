@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { DEFAULT_LIMIT } from './counter.utils';
 
 @Entity()
 export class CounterEntry {
@@ -14,6 +15,6 @@ export class CounterEntry {
   @Column({ type: 'integer', default: 0 })
   dog!: number;
 
-  @Column({ type: 'integer', default: 100 })
+  @Column({ type: 'integer', default: DEFAULT_LIMIT })
   limit!: number;
 }

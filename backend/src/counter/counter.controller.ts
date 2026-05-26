@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, HttpCode } from '@nestjs/common';
 import { CounterService } from './counter.service';
 import { CounterGateway } from './counter.gateway';
+import { DEFAULT_LIMIT } from './counter.utils';
 
 class UpdateCounterDto {
   god!: number;
@@ -22,7 +23,7 @@ export class CounterController {
         date: new Date().toISOString().split('T')[0],
         dog: 0,
         god: 0,
-        limit: 100,
+        limit: DEFAULT_LIMIT,
       }
     );
   }
