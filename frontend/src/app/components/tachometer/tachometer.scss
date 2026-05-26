@@ -43,6 +43,33 @@
     }
 }
 
+// Svg classes
+
+.cls-1 {
+        fill: #c1272d;
+}
+
+.cls-2 {
+    fill: #050505;
+}
+
+.cls-3 {
+    fill: white;
+}
+
+.cls-text {
+    font-size: 1.25rem;
+    font-family: Inter, Arial-BoldMT, Arial;
+    font-weight: 700;
+    letter-spacing: -0.05em;        
+}
+.cls-text-center {
+    text-anchor: middle;
+}
+.cls-text-left {
+    text-anchor: end;
+}
+
 @keyframes shake {
     0% { transform: rotate(216deg); }
     25% { transform: rotate(221deg); }

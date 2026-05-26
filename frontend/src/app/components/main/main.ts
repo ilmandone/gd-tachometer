@@ -26,6 +26,9 @@ export class Main {
   private _optimistic = signal<number>(0);
   private _serverData = signal<CounterEntry | undefined>(undefined);
 
+  private _soundDog = this._createAudioElement('/sounds/dog.mp3');
+  private _soundGod = this._createAudioElement('/sounds/god.mp3');
+
   private _flush$ = new Subject<void>();
   private _flushSub = this._flush$
     .pipe(
@@ -49,7 +52,6 @@ export class Main {
     const base = server ? server.god + server.dog : 0;
     return base + this._optimistic();
   });
-
   day = computed(() => this._serverData()?.date ?? '01/01/1970');
   max = computed(() => this._serverData()?.limit ?? 100);
 
@@ -61,8 +63,10 @@ export class Main {
     this.update();
     if(this._lastValue === 'god') {
       this.godBright.set(true);
+      this._playSound(this._soundGod);
     } else {
       this.dogBright.set(true);
+      this._playSound(this._soundDog);
     }
   }
 
@@ -72,24 +76,26 @@ export class Main {
     this.dogBright.set(false);
   }
 
-  @HostListener('window:keydown.g')
+  @HostListener('window:keydown.d')
   onD() {
     this.update('dog');
+    this._playSound(this._soundDog);
     this.dogBright.set(true);
   }
 
-  @HostListener('window:keydown.d')
+  @HostListener('window:keydown.g')
   onC() {
     this.update('god');
+    this._playSound(this._soundGod);
     this.godBright.set(true);
   }
 
-  @HostListener('window:keyup.g')
+  @HostListener('window:keyup.d')
   onDUp() {
     this.dogBright.set(false);
   }
 
-  @HostListener('window:keyup.d')
+  @HostListener('window:keyup.g')
   onCUp() {
     this.godBright.set(false);
   }
@@ -125,6 +131,34 @@ export class Main {
     this._newValue[value] += 1;
     this._optimistic.update((v) => v + 1);
     this._flush$.next();
+  }
+
+  private _loadSounds() {
+      const godSound = new Audio('/sounds/god.mp3');
+      const dogSound = new Audio('/sounds/dog.mp3');
+
+      godSound.load();
+      dogSound.load();
+
+      return { godSound, dogSound };
+  }
+
+  private _createAudioElement(src: string): HTMLAudioElement {
+    const audio = new Audio();
+    const srcElement = document.createElement('source');
+
+    srcElement.src = src;
+    srcElement.type = 'audio/mpeg';
+    audio.appendChild(srcElement);
+    audio.load();
+    
+    return audio;
+  }
+
+  private _playSound(audio: HTMLAudioElement) {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.play();
   }
 
   //#endregion
