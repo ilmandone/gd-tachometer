@@ -1,7 +1,8 @@
 @use '../../../styles/fonts.scss' as f;
+@use '../../../styles/focus.scss' as fo;
 
 :host {
-    min-width: 6rem;
+    min-width: 4rem;
 
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
@@ -17,7 +18,7 @@
         font-size: 1.25rem;
         line-height: 1.25rem;
 
-        @include f.getFF(800, -0.05rem);
+        @include f.getFF(600, -0.05rem);
 
         &:hover {
             background: #c00909;
@@ -45,4 +46,8 @@
             filter: brightness(1.5);
         }
     }
+
+  &:focus-visible {
+    @include fo.focusVisible;
+  }
 }
