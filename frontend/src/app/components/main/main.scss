@@ -32,6 +32,10 @@
         margin-top: 1rem;
         display: flex;
         column-gap: 0.5rem;
+
+        img.bright {
+            filter: brightness(5) saturate(6);
+        }
     }
 
     button {

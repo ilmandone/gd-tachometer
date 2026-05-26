@@ -4,7 +4,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { Button } from '../button/button';
 import { CounterService } from '../../services/counter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, Subject, switchMap } from 'rxjs';
+import { debounceTime, of, Subject, switchMap } from 'rxjs';
 import { ValueType } from './main.utils';
 
 @Component({
@@ -34,6 +34,7 @@ export class Main {
       switchMap(() => {
         const { god, dog } = this._newValue;
         this._newValue = { god: 0, dog: 0 };
+        return of([])
         return this._counterService.update(god, dog);
       }),
     )
@@ -54,6 +55,47 @@ export class Main {
   day = computed(() => this._todayData()?.date ?? '01/01/1970');
   max = computed(() => this._todayData()?.limit ?? 100);
 
+  dogBright = signal(false);
+  godBright = signal(false);
+
+  @HostListener('window:keydown.enter')
+  onEnter() {
+    this.update();
+    if(this._lastValue === 'god') {
+      this.godBright.set(true);
+    } else {
+      this.dogBright.set(true);
+    }
+  }
+
+  @HostListener('window:keyup.enter')
+  onEnterUp() {
+    this.godBright.set(false);
+    this.dogBright.set(false);
+  }
+
+  @HostListener('window:keydown.g')
+  onD() {
+    this.update('dog');
+    this.dogBright.set(true);
+  }
+
+  @HostListener('window:keydown.d')
+  onC() {
+    this.update('god');
+    this.godBright.set(true);
+  }
+
+  @HostListener('window:keyup.g')
+  onDUp() {
+    this.dogBright.set(false);
+  }
+
+  @HostListener('window:keyup.d')
+  onCUp() {
+    this.godBright.set(false);
+  }
+
   constructor() {
     this._destroyRef.onDestroy(() => {
       this._flushSub?.unsubscribe();
@@ -68,21 +110,9 @@ export class Main {
     this._lastValue = newValue;
     this._update(newValue);
   }
+  
 
-  @HostListener('window:keydown.enter')
-  onEnter() {
-    this.update();
-  }
-
-  @HostListener('window:keydown.d')
-  onD() {
-    this.update('dog');
-  }
-
-  @HostListener('window:keydown.c')
-  onC() {
-    this.update('god');
-  }
+  
 
   //#region Privates
 
