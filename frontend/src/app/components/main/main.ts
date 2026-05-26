@@ -58,16 +58,14 @@ export class Main {
   dogBright = signal(false);
   godBright = signal(false);
 
-  @HostListener('window:keydown.enter')
-  onEnter() {
-    this.update();
-    if(this._lastValue === 'god') {
-      this.godBright.set(true);
-      this._playSound(this._soundGod);
-    } else {
-      this.dogBright.set(true);
-      this._playSound(this._soundDog);
+  @HostListener('window:keydown.enter', ['$event'])
+  onEnter(event: Event) {
+    if((event as KeyboardEvent).repeat) {
+      return;
     }
+    
+    this.update();
+
   }
 
   @HostListener('window:keyup.enter')
@@ -76,18 +74,22 @@ export class Main {
     this.dogBright.set(false);
   }
 
-  @HostListener('window:keydown.d')
-  onD() {
+  @HostListener('window:keydown.d', ['$event'])
+  onD(event: Event) {
+    if((event as KeyboardEvent).repeat) {
+      return;
+    }
     this.update('dog');
-    this._playSound(this._soundDog);
-    this.dogBright.set(true);
+    
   }
 
-  @HostListener('window:keydown.g')
-  onC() {
+  @HostListener('window:keydown.g', ['$event'])
+  onC(event: Event) {
+    if((event as KeyboardEvent).repeat) {
+      return;
+    }
     this.update('god');
-    this._playSound(this._soundGod);
-    this.godBright.set(true);
+    
   }
 
   @HostListener('window:keyup.d')
@@ -119,10 +121,16 @@ export class Main {
   protected update(value?: ValueType) {
     const newValue = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
 
-    // TODO UPDATE THE ICON BY THE NEW VALUE
-
     this._lastValue = newValue;
     this._update(newValue);
+    
+    if(newValue === 'god') {
+      this._playSound(this._soundGod);
+      this.godBright.set(true);
+    } else {
+      this._playSound(this._soundDog);
+      this.dogBright.set(true);
+    }
   }
   
   //#region Privates
@@ -131,16 +139,6 @@ export class Main {
     this._newValue[value] += 1;
     this._optimistic.update((v) => v + 1);
     this._flush$.next();
-  }
-
-  private _loadSounds() {
-      const godSound = new Audio('/sounds/god.mp3');
-      const dogSound = new Audio('/sounds/dog.mp3');
-
-      godSound.load();
-      dogSound.load();
-
-      return { godSound, dogSound };
   }
 
   private _createAudioElement(src: string): HTMLAudioElement {
