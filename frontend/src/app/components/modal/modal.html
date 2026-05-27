@@ -1,0 +1,13 @@
+@if (show()) {
+  <div class="overlay" (click)="show.set(false)"></div>
+  <section class="modal">
+    <header>
+      <h2><ng-content select="title" /></h2>
+      <button app variant="secondary" class="close" (click)="show.set(false)">Close</button>
+    </header>
+
+    <div class="body">
+      <ng-content />
+    </div>
+  </section>
+}

@@ -1,4 +1,9 @@
 :host {
   position: relative;
   padding: 0 0 1rem;
+
+  display: flex;
+  column-gap: 1rem;
+
+  align-items: center;
 }
