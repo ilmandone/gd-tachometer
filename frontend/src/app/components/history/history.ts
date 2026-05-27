@@ -3,6 +3,7 @@ import { Button } from '../button/button';
 import { Modal } from '../modal/modal';
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
+import { CounterEntry, CounterService } from '../../services/counter.service';
 
 @Component({
   selector: 'app-history',
@@ -10,25 +11,36 @@ import { NgxEchartsDirective } from 'ngx-echarts';
   templateUrl: './history.html',
   styleUrl: './history.scss',
 })
-export class History implements OnInit{
+export class History implements OnInit {
+  private readonly _counterService = inject(CounterService);
+
+  loading = signal(true);
   showHistory = signal(false);
   options!: EChartsCoreOption;
 
-
   ngOnInit(): void {
-    const xAxisData = [];
-    const data1 = [];
-    const data2 = [];
+    this._counterService.getAll().subscribe((r) => {
+      this.loading.set(false);
+      this.initChart(r);
+    });
+  }
 
-    for (let i = 0; i < 100; i++) {
-      xAxisData.push('category' + i);
-      data1.push((Math.sin(i / 5) * (i / 5 - 10) + i / 6) * 5);
-      data2.push((Math.cos(i / 5) * (i / 5 - 10) + i / 6) * 5);
+  private initChart(entries: CounterEntry[]) {
+    const xAxisData = [];
+    const dogData = [];
+    const godData = [];
+    const totalData= [];
+
+    for (let i = 0; i < entries.length; i++) {
+      xAxisData.push(new Date(entries[i].date).toLocaleDateString('it-IT'));
+      dogData.push(entries[i].dog);
+      godData.push(entries[i].god);
+      totalData.push(entries[i].dog + entries[i].god);
     }
 
     this.options = {
       legend: {
-        data: ['bar', 'bar2'],
+        data: ['Dog', 'God'],
         align: 'left',
       },
       tooltip: {},
@@ -39,19 +51,32 @@ export class History implements OnInit{
           show: false,
         },
       },
-      yAxis: {},
+      yAxis: {
+        type: 'value',
+      },
       series: [
         {
-          name: 'bar',
+          name: 'Dog',
           type: 'bar',
-          data: data1,
+          color: '#c00909',
+          data: dogData,
+        
           animationDelay: (idx: number) => idx * 10,
         },
         {
-          name: 'bar2',
+          name: 'God',
           type: 'bar',
-          data: data2,
+          color: '#0090c0',
+          data: godData,
           animationDelay: (idx: number) => idx * 10 + 100,
+        },
+        {
+          name: 'Total',
+          type: 'line',
+          smooth: true,
+          color: '#000000',
+          data: totalData,
+          animationDelay: (idx: number) => idx * 10 + 200,
         },
       ],
       animationEasing: 'elasticOut',
