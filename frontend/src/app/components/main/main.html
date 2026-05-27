@@ -8,7 +8,7 @@
         <img [class.bright]="dogBright()" ngSrc="/vectors/dog.svg" alt="moon" width="72" height="72">
     </div>
 
-    <button app (mousedown)="update()" (keydown)="update()" (keyup)="onKeyUp()">
+    <button app (mousedown)="update()" (keydown.space)="update()" (keyup)="onKeyUp()">
       <span class="plus">+</span>
     </button>
 
