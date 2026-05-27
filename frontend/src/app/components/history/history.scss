@@ -1,0 +1,10 @@
+:host {
+    position: relative;
+    display: block;
+
+    div[echarts] {
+        width: 60vw;    
+        min-width: 400px;
+        overflow-x: auto;
+    }
+}

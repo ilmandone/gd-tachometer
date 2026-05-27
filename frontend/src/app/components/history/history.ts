@@ -39,6 +39,11 @@ export class History implements OnInit {
     }
 
     this.options = {
+      grid: {
+        top: 10,
+        right: 0,
+        left: 0,
+    },
       legend: {
         data: ['Dog', 'God'],
         align: 'left',
