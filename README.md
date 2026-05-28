@@ -1,9 +1,8 @@
-<img width="1288" height="919" alt="image" src="https://github.com/user-attachments/assets/775b2276-3ec5-4916-9007-34b61203c018" />
-
-
 # GD Tachometer
 
 > *How many times today did you invoke a deity or a dog?*
+
+<img width="1288" height="919" alt="image" src="https://github.com/user-attachments/assets/775b2276-3ec5-4916-9007-34b61203c018" />
 
 **GD Tachometer** is a tongue-in-cheek counter for involuntary invocations of a deity (**G**) or a dog (**D**) during particularly demanding workdays. Because sometimes the best stress thermometer is counting how many times you said something you wouldn't say in front of children.
 
