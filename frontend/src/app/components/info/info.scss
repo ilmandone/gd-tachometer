@@ -2,6 +2,7 @@
 @use '../../../styles/utils.scss' as u;
 
 :host {
+  width: 80vw;
   display: grid;
   grid-template-columns: auto auto auto;
   align-items: flex-end;
@@ -16,14 +17,11 @@
     grid-area: info;
 
     .day {
-      // font-size: 1.25rem;
       font-size: 1rem;
       @include f.getFF(600, -0.05rem);
     }
 
     .current {
-      // font-size: 4.5rem;
-      // @include f.getFF(800, -0.2rem);
       font-size: 3.5rem;
       @include f.getFF(700, -0.2rem);
     }
@@ -65,6 +63,20 @@
     margin-top: 1rem;
     font-size: 0.875rem;
     @include f.getFF(600, -0.05rem);
+
+    &--desktop {
+      display: none;
+    }
+
+    @include u.media('mouse') {
+      &--desktop {
+        display: block;
+      }
+
+      &--mobile {
+        display: none;
+      }
+    }
   }
 
   @include u.media('t') {
