@@ -1,51 +1,56 @@
 @use '../../../styles/fonts.scss' as f;
 @use '../../../styles/focus.scss' as fo;
+@use '../../../styles/utils.scss' as u;
 
 :host {
-    min-width: 4rem;
+  min-width: 4rem;
 
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &.primary {
-        background: #020202;
-        color: white;
+  &.primary {
+    background: #020202;
+    color: white;
 
-        font-size: 1.25rem;
-        line-height: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
 
-        @include f.getFF(600, -0.05rem);
+    @include f.getFF(600, -0.05rem);
 
-        &:hover {
-            background: #c00909;
-        }
-
-        &:active {
-            filter: brightness(0.85);
-        }
+    @include u.media('mouse') {
+      &:hover {
+        background: #c00909;
+      }
     }
 
-    &.secondary {
-        font-size: 0.875rem;
-        line-height: 0.875rem;
-
-        color: #c00909;
-
-        @include f.getFF(600, -0.05rem);
-
-        &:hover {
-            color: #590e0e;
-            text-decoration: underline;
-        }
-
-        &:active {
-            filter: brightness(1.5);
-        }
+    &:active {
+      // Repeat the background for touch devices
+      background: #c00909;
+      filter: brightness(0.85);
     }
+  }
+
+  &.secondary {
+    font-size: 0.875rem;
+    line-height: 0.875rem;
+
+    color: #c00909;
+
+    @include f.getFF(600, -0.05rem);
+
+    &:hover {
+      color: #590e0e;
+      text-decoration: underline;
+    }
+
+    &:active {
+      filter: brightness(1.5);
+    }
+  }
 
   &:focus-visible {
     @include fo.focusVisible;

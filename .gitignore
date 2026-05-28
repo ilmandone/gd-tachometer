@@ -12,7 +12,7 @@
 
 # Backend
 
-/backend/db.sqlite
+/**/db.sqlite
 
 # Tests
 /**/coverage

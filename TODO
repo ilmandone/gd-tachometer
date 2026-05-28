@@ -1,0 +1,1 @@
+* Aggiornare il calcolo del giorno dopo -> Dividere il valore per 10, trovare il valore intero per 1/12 e rimoltiplicarlo per 10

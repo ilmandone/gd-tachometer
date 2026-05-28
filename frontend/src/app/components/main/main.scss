@@ -1,52 +1,31 @@
 @use '../../../styles/fonts.scss' as f;
+@use '../../../styles/utils.scss' as u;
 
 :host {
   position: relative;
-  width: 80vw;
-  max-width: 800px;
+  width: 95vw;
+  height: 100%;
+
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 
-  .info {
-    position: absolute;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  app-tachometer {
+    margin-left: 5vw;
+  }
 
-    .day {
-      font-size: 1.25rem;
-      @include f.getFF(600, -0.05rem);
-    }
+  @include u.media('t') {
+    width: 70vw;
+  }
 
-    .current {
-      font-size: 4.5rem;
-      @include f.getFF(800, -0.2rem);
-    }
+  @include u.media('tl') {
+    max-width: 800px;
+    flex-direction: row;
+    align-items: center;
 
-    .icons {
-      margin-top: 1rem;
-      display: flex;
-      column-gap: 0.5rem;
-
-      img.bright {
-        filter: brightness(5) saturate(6);
-      }
-    }
-
-    button {
-      margin-top: 5rem;
-
-      .plus {
-        font-weight: 800;
-      }
-
-    }
-
-    .legend {
-      margin-top: 1rem;
-      font-size: 0.875rem;
-      @include f.getFF(600, -0.05rem);
+    app-tachometer {
+      margin-left: 0;
     }
   }
 }

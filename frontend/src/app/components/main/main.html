@@ -1,19 +1,10 @@
 <app-tachometer [current]="current()" [max]="max()"></app-tachometer>
 
-<div class="info">
-    <p class="day">{{day()}}</p>
-    <p class="current">{{ current() }}</p>
-    <div class="icons">
-        <img [class.bright]="godBright()" ngSrc="/vectors/god.svg" alt="sun" width="72" height="72">
-        <img [class.bright]="dogBright()" ngSrc="/vectors/dog.svg" alt="moon" width="72" height="72">
-    </div>
-
-    <button app (mousedown)="update()" (keydown.space)="update()" (keyup)="onKeyUp()">
-      <span class="plus">+</span>
-    </button>
-
-    <div class="legend">
-        <p>Press the button or ENTER key to add a random G or D</p>
-        <p>Use G or D to be more specific.</p>
-    </div>
-</div>
+<app-info
+  [current]="current()"
+  [day]="day()"
+  [godIsBright]="godBright()"
+  [dogIsBright]="dogBright()"
+  (keyup)="onKeyUp()"
+  (keydown)="update()"
+></app-info>
