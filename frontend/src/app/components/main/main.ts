@@ -1,16 +1,15 @@
 import { Component, computed, HostListener, inject, signal, WritableSignal } from '@angular/core';
-import { Tachometer } from '../tachometer/tachometer';
-import { NgOptimizedImage } from '@angular/common';
-import { Button } from '../button/button';
-import { CounterEntry, CounterService } from '../../services/counter.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, Subject, switchMap } from 'rxjs';
-import { ValueType } from './main.utils';
+import { CounterEntry, CounterService } from '../../services/counter.service';
 import { SocketService } from '../../services/socket.service';
+import { Info } from '../info/info';
+import { Tachometer } from '../tachometer/tachometer';
+import { ValueType } from './main.utils';
 
 @Component({
   selector: 'app-main',
-  imports: [Tachometer, NgOptimizedImage, Button],
+  imports: [Tachometer, Info],
   templateUrl: './main.html',
   styleUrl: './main.scss',
 })
