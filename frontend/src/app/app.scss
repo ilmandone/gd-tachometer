@@ -1,7 +1,7 @@
 :host {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
 
     padding: 0.5rem 0 0.75rem;
     box-sizing: border-box;
@@ -17,7 +17,7 @@
         flex: 1;
     }
 
-    footer[app] {        
+    footer[app] {
         flex: 0;
     }
 }
