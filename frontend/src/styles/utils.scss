@@ -1,0 +1,37 @@
+@use 'sass:map';
+
+$reference: (
+  "pl": "(max-width: 567px)",
+  "t": "(min-width: 768px)",
+  "tl": "(min-width: 1024px)",
+  "d": "(min-width: 1025px)",
+  "dm": "(min-width: 1440px)",
+  "dl": "(min-width: 1920px)",
+  "dxl": "(min-width: 2200px)",
+  "touch": "(hover:none) and (pointer:coarse)",
+  "mouse": "(hover:hover) and (pointer:fine)",
+) !default;
+
+$screen-sizes: map.remove($reference, "touch", "mouse", "pl");
+
+@mixin media($breakpoint) {
+  @if map.has-key($reference, $breakpoint) {
+    @media #{map.get($reference, $breakpoint)} {
+      @content;
+    }
+  }
+}
+
+// Z-index
+$depth: (
+  'header': 100,
+  'dot': 150,
+  'scroller': 200,
+  'loader': 9999
+);
+
+@mixin zIndex($value) {
+  @if map.has-key($depth, $value) {
+    z-index: #{map.get($depth, $value)};
+  }
+}
