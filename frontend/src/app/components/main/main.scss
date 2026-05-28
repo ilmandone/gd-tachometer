@@ -1,18 +1,26 @@
 @use '../../../styles/fonts.scss' as f;
+@use '../../../styles/utils.scss' as u;
 
 :host {
   position: relative;
   width: 95vw;
   height: 100%;
   // max-width: 800px;
+  // align-items: flex-end;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  // align-items: flex-end;
 
   app-tachometer {
     margin-left: 5vw;
   }
-  
+
+  @include u.media('t') {
+    width: 70vw;
+    app-tachometer {
+      margin-left: 0;
+    }
+  }  
 }
