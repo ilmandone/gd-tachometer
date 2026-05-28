@@ -56,14 +56,12 @@ Open `http://localhost:4200`.
 ## Production with Docker
 
 ```bash
-# Build the image (from the project root)
-docker build -t gd-tachometer .
+# Build the image and run
+task docker:up
 
-# Run without persistence (quick test)
-docker run -p 3000:3000 gd-tachometer
-
-# Run with database persistence
-docker run -p 3000:3000 -v gd-tachometer-data:/app/db.sqlite gd-tachometer
+# Or manually (from project root)
+docker compose -f docker\docker-compose.yml build
+docker compose -f docker\docker-compose.yml up
 ```
 
 Open `http://localhost:3000`.

@@ -1,0 +1,45 @@
+services:
+  postgres:
+    container_name: postgres
+    build: ./postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - dg-postgres-data:/var/lib/postgresql-static/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-gddb}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+    networks:
+      - dg-dev
+    healthcheck:
+        test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}"]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+  gd-tachometer:
+    container_name: gd-tachometer
+    build: ../
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
+      POSTGRES_DB: ${POSTGRES_DB:-gddb}
+    ports:
+      - 3000:3000
+    networks:
+      - dg-dev
+
+networks:
+  dg-dev:
+    name: dg-dev-network
+
+volumes:
+  dg-postgres-data:
+    labels:
+      dg.volume: dg-postgres-data
