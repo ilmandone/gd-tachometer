@@ -65,8 +65,8 @@ export class Main {
         switchMap(() => {
           const server = this._serverData();
           const payload = {
-            god: (server?.god ?? 0) + this._newValue.god,
-            dog: (server?.dog ?? 0) + this._newValue.dog,
+            god: this._newValue.god,
+            dog: this._newValue.dog,
           };
           this._newValue = { god: 0, dog: 0 };
           return this._counterService.update(payload.god, payload.dog);
@@ -104,7 +104,7 @@ export class Main {
     this.godBright.set(false);
     this.dogBright.set(false);
   }
-  
+
   protected update(value?: ValueType) {
     const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
     this._lastValue = next;
