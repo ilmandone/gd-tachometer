@@ -65,7 +65,7 @@ export class History implements OnInit {
           type: 'bar',
           color: '#c00909',
           data: dogData,
-        
+
           animationDelay: (idx: number) => idx * 10,
         },
         {
