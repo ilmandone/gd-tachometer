@@ -1,59 +1,92 @@
-@use "../../../styles/fonts.scss" as f;
+@use '../../../styles/fonts.scss' as f;
+@use '../../../styles/utils.scss' as u;
 
 :host {
-    position: relative;
-    display: block;
-    width: 80vw;
-    height: 80vw;
-    max-width: 640px;
-    max-height: 640px;
+  position: relative;
+  display: block;
+  width: 80vw;
+  height: 80vw;
+  max-width: 640px;
+  max-height: 640px;
 
-    svg,
-    img:not(:first-child) {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
+  svg,
+  img:not(:first-child) {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 
+  .label {
+    position: absolute;
+    top: 24%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 0.75rem;
+    @include f.getFF(600, -0.05rem);
+  }
+
+  .over-rpm {
+    animation: shake 80ms infinite;
+  }
+
+  .needle {
+    transition: transform 150ms ease-out;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  // SVG indicator classes
+  .cls-1 {
+    fill: #c1272d;
+  }
+  .cls-2 {
+    fill: #050505;
+  }
+  .cls-3 {
+    fill: white;
+  }
+
+  .cls-text {
+    font-size: 1.25rem;
+    font-family: Inter, Arial-BoldMT, Arial;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+  }
+
+  .cls-text-center {
+    text-anchor: middle;
+  }
+  .cls-text-left {
+    text-anchor: end;
+  }
+
+  @include u.media('t') {
     .label {
-        position: absolute;
-        top: 200px;
-        left: 50%;
-        transform: translate(-50%, 0);
-        font-size: 1.5rem;
-        @include f.getFF(600, -0.05rem);
+      font-size: 1.5rem;
     }
+  }
 
-    .over-rpm {
-        animation: shake 80ms infinite;
+  @include u.media('tl') {
+    .label {
+      font-size: 1.5rem;
     }
-
-    .needle {
-        transition: transform 150ms ease-out;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    // SVG indicator classes
-    .cls-1 { fill: #c1272d; }
-    .cls-2 { fill: #050505; }
-    .cls-3 { fill: white; }
-
-    .cls-text {
-        font-size: 1.25rem;
-        font-family: Inter, Arial-BoldMT, Arial;
-        font-weight: 700;
-        letter-spacing: -0.05em;
-    }
-
-    .cls-text-center { text-anchor: middle; }
-    .cls-text-left   { text-anchor: end; }
+  }
 }
 
 @keyframes shake {
-    0%   { transform: rotate(216deg); }
-    25%  { transform: rotate(221deg); }
-    50%  { transform: rotate(216deg); }
-    75%  { transform: rotate(211deg); }
-    100% { transform: rotate(216deg); }
+  0% {
+    transform: rotate(216deg);
+  }
+  25% {
+    transform: rotate(221deg);
+  }
+  50% {
+    transform: rotate(216deg);
+  }
+  75% {
+    transform: rotate(211deg);
+  }
+  100% {
+    transform: rotate(216deg);
+  }
 }
