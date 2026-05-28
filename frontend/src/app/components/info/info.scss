@@ -1,4 +1,5 @@
 @use '../../../styles/fonts.scss' as f;
+@use '../../../styles/utils.scss' as u;
 
 :host {
   /* position: absolute;
@@ -6,6 +7,7 @@
   /* display: flex;
   flex-direction: column;
   align-items: flex-start; */
+
   display: grid;
   grid-template-columns: auto auto auto;
   align-items: flex-end;
@@ -36,7 +38,6 @@
   .icons {
     grid-area: icons;
     padding-bottom: 0.5rem;
-
 
     display: flex;
     justify-content: flex-end;
@@ -69,5 +70,9 @@
     margin-top: 1rem;
     font-size: 0.875rem;
     @include f.getFF(600, -0.05rem);
+  }
+
+  @include u.media('t') {
+    width: 100%;
   }
 }
