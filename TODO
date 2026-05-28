@@ -1,0 +1,6 @@
+* Completare la parte responsiva
+* Il messaggio deve cambiare per dispositivi touch
+* Rimuovere l'effetto hover sul button per dispositivi touch
+* Sistemare la modale del disclamer
+* Sistemare la modale dell'history
+* Aggiornare il calcolo del giorno dopo -> Dividere il valore per 10, trovare il valore intero per 1/12 e rimoltiplicarlo per 10
