@@ -4,9 +4,7 @@
 :host {
   position: relative;
   width: 95vw;
-  height: 100%;
-  // max-width: 800px;
-  // align-items: flex-end;
+  height: 100%;  
 
   display: flex;
   flex-direction: column;
@@ -19,8 +17,15 @@
 
   @include u.media('t') {
     width: 70vw;
+  }
+
+  @include u.media('tl') {
+    max-width: 800px;
+    flex-direction: row;
+    align-items: flex-end;
+
     app-tachometer {
       margin-left: 0;
     }
-  }  
+  }
 }

@@ -2,12 +2,6 @@
 @use '../../../styles/utils.scss' as u;
 
 :host {
-  /* position: absolute;
-  right: 0; */
-  /* display: flex;
-  flex-direction: column;
-  align-items: flex-start; */
-
   display: grid;
   grid-template-columns: auto auto auto;
   align-items: flex-end;
@@ -74,5 +68,21 @@
 
   @include u.media('t') {
     width: 100%;
+  }
+
+  @include u.media('tl') {
+    position: absolute;
+    width: 20vw;
+    max-width: 240px;
+    right: 0;
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-start; */
+    
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      'info icons'
+      'button button'
+      'legend legend';
   }
 }
