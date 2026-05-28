@@ -15,7 +15,7 @@ import { SocketService } from '../../services/socket.service';
   styleUrl: './main.scss',
 })
 export class Main {
-  private readonly INTERACTION_DEBOUNCE = 600;
+  private readonly INTERACTION_DEBOUNCE = 400;
   private readonly _counterService = inject(CounterService);
   private readonly _socketService = inject(SocketService);
 
