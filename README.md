@@ -1,3 +1,6 @@
+<img width="1288" height="919" alt="image" src="https://github.com/user-attachments/assets/775b2276-3ec5-4916-9007-34b61203c018" />
+
+
 # GD Tachometer
 
 > *How many times today did you invoke a deity or a dog?*
