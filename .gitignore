@@ -12,6 +12,8 @@
 
 # Backend
 
+/backend/db.sqlite
+
 # Tests
 /**/coverage
 /**/.nyc_output
