@@ -104,7 +104,7 @@ export class Main {
     this.godBright.set(false);
     this.dogBright.set(false);
   }
-
+  
   protected update(value?: ValueType) {
     const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
     this._lastValue = next;

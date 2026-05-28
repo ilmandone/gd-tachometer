@@ -2,8 +2,17 @@
 
 :host {
   position: relative;
-  width: 80vw;
-  max-width: 800px;
+  width: 95vw;
+  height: 100%;
+  // max-width: 800px;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  // align-items: flex-end;
+
+  app-tachometer {
+    margin-left: 5vw;
+  }
+  
 }

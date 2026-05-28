@@ -4,8 +4,10 @@
 :host {
   position: relative;
   display: block;
-  width: 80vw;
-  height: 80vw;
+  width: 100%;
+  height: auto;
+  /* width: 80vw;
+  height: 80vw; */
   max-width: 640px;
   max-height: 640px;
 

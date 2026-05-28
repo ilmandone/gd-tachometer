@@ -1,13 +1,24 @@
-<p class="day">{{ day() }}</p>
-<p class="current">{{ current() }}</p>
+<div class="info">
+  <p class="day">{{ day() }}</p>
+  <p class="current">{{ current() }}</p>
+</div>
+
 <div class="icons">
   <img [class.bright]="godIsBright()" ngSrc="/vectors/god.svg" alt="sun" width="72" height="72" />
   <img [class.bright]="dogIsBright()" ngSrc="/vectors/dog.svg" alt="moon" width="72" height="72" />
 </div>
 
-<button app (mousedown)="keydown.emit()" (keydown.space)="keydown.emit()" (keyup)="keyup.emit()">
-  <span class="plus">+</span>
-</button>
+<div class="button-container">
+  <button
+    app
+    (pointerdown)="keydown.emit()"
+    (keydown.space)="keydown.emit()"
+    (keyup)="keyup.emit()"
+    (pointerup)="keyup.emit()"
+  >
+    <span class="plus">+</span>
+  </button>
+</div>
 
 <div class="legend">
   <p>Press the button or ENTER key to add a random G or D</p>
