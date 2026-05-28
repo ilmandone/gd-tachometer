@@ -52,6 +52,7 @@
 
     button {
       width: 100%;
+
       .plus {
         font-weight: 800;
       }
@@ -75,14 +76,42 @@
     width: 20vw;
     max-width: 240px;
     right: 0;
-    /* display: flex;
-    flex-direction: column;
-    align-items: flex-start; */
-    
-    grid-template-columns: auto auto;
+
+    margin-top: 25%;
+
+    grid-template-columns: auto;
     grid-template-areas:
-      'info icons'
-      'button button'
-      'legend legend';
+      'info'
+      'icons'
+      'button'
+      'legend';
+
+    .info {
+      .day {
+        font-size: 1.25rem;
+      }
+
+      .current {
+        font-size: 4.5rem;
+        @include f.getFF(800, -0.2rem);
+      }
+    }
+
+    .icons {
+      justify-content: flex-start;
+
+      img {
+        width: 72px;
+        height: 72px;
+      }
+    }
+
+    .button-container {
+      margin-top: 4vh;
+
+      button {
+        width: auto;
+      }
+    }
   }
 }

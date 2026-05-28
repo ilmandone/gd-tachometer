@@ -22,7 +22,7 @@
   @include u.media('tl') {
     max-width: 800px;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
 
     app-tachometer {
       margin-left: 0;
