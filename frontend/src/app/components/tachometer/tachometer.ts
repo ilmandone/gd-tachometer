@@ -27,9 +27,9 @@ export class Tachometer {
     const tick = max / 10;
     return [
       0,
-      Math.round(tick * LEFT_MARK_RATIO),
-      Math.round(tick * TOP_MARK_RATIO),
-      Math.round(tick),
+      Math.floor(tick * LEFT_MARK_RATIO),
+      Math.floor(tick * TOP_MARK_RATIO),
+      Math.floor(tick),
     ];
   });
 }
