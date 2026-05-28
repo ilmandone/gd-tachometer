@@ -78,3 +78,9 @@ today_limit = max(200, yesterday_G + yesterday_D)
 ```
 
 If yesterday you racked up 350 invocations, today the tachometer aims for 350. The limit never drops below 200.
+
+---
+
+## Acknowledgements
+
+This project was born from the spark of inspiration we found in [Uri Glauco](https://github.com/glaucouri), and it would not exist without it.
