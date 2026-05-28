@@ -54,8 +54,8 @@ export class CounterService {
     });
 
     if (entry) {
-      entry.god = god;
-      entry.dog = dog;
+      entry.god += god;
+      entry.dog += dog;
     } else {
       entry = this.counterRepository.create({ date: today, god, dog });
     }
