@@ -9,20 +9,21 @@ tasks:
       - docker compose -f docker-compose.yml -f docker-compose-db.yml up
 
   backend:start:
-    desc: Run the backend in development mode
+    desc: Run the backend in development mode (add "-- i" to install dependencies and rebuild postgres image)
     dir: backend
-    # deps:
     cmds:
-      - npm install
-      - docker compose -f ../docker/docker-compose-db.yml build
+      - |
+        {{if eq .CLI_ARGS "i"}} 
+        npm install
+        docker compose -f ../docker/docker-compose-db.yml build
+        {{end}}
       - defer: docker compose -f ../docker/docker-compose-db.yml stop
       - docker compose -f ../docker/docker-compose-db.yml up -d
       - npm run start:dev
 
   frontend:start:
-    desc: Run the frontend in development mode
+    desc: Run the frontend in development mode (add "-- i" to install dependencies)
     dir: frontend
-    # deps:
     cmds:
-      - npm install
+      - '{{if eq .CLI_ARGS "i"}}npm install{{end}}'
       - npm run start
