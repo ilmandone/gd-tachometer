@@ -26,7 +26,7 @@ The tachometer updates in real time across all connected devices.
 
 | Layer | Technologies |
 |-------|-------------|
-| Backend | NestJS · TypeORM · SQLite (better-sqlite3) · Socket.IO |
+| Backend | NestJS · TypeORM · PostgreSQL · Socket.IO |
 | Frontend | Angular 21 · Signals · RxJS · Socket.IO client |
 | Deploy | Docker (single image, multi-stage build) |
 
@@ -34,7 +34,8 @@ The tachometer updates in real time across all connected devices.
 
 ## Local development
 
-**Prerequisites:** Node.js 22+
+**Prerequisites:** Node.js 22+, PostgreSQL 16+  
+Configure .env file in ./backend folder from develop.env.default file
 
 ```bash
 # Backend (port 3000)
@@ -55,14 +56,12 @@ Open `http://localhost:4200`.
 ## Production with Docker
 
 ```bash
-# Build the image (from the project root)
-docker build -t gd-tachometer .
+# Build the image and run
+task docker:up
 
-# Run without persistence (quick test)
-docker run -p 3000:3000 gd-tachometer
-
-# Run with database persistence
-docker run -p 3000:3000 -v gd-tachometer-data:/app/db.sqlite gd-tachometer
+# Or manually (from project root)
+docker compose -f docker\docker-compose.yml build
+docker compose -f docker\docker-compose.yml up
 ```
 
 Open `http://localhost:3000`.
