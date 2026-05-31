@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CounterEntry } from './counter.entity';
 import { Repository } from 'typeorm';
-import { DEFAULT_LIMIT } from './counter.utils';
+import { DEFAULT_LIMIT, getDateString } from './counter.utils';
 
 @Injectable()
 export class CounterService {
@@ -12,7 +12,7 @@ export class CounterService {
   ) {}
 
   async getToday(): Promise<CounterEntry | null> {
-    const today = this.getTodayString();
+    const today = getDateString(process.env.COUNTER_TZ);
     return this.counterRepository.findOne({ where: { date: today } });
   }
 
@@ -21,7 +21,7 @@ export class CounterService {
   }
 
   async initToday(): Promise<void> {
-    const today = this.getTodayString();
+    const today = getDateString(process.env.COUNTER_TZ);
     const exists = await this.counterRepository.findOne({
       where: { date: today },
     });
@@ -48,7 +48,7 @@ export class CounterService {
   }
 
   async upsertToday(god: number, dog: number): Promise<CounterEntry> {
-    const today = this.getTodayString();
+    const today = getDateString(process.env.COUNTER_TZ);
     let entry = await this.counterRepository.findOne({
       where: { date: today },
     });
@@ -61,9 +61,5 @@ export class CounterService {
     }
 
     return this.counterRepository.save(entry);
-  }
-
-  private getTodayString(): string {
-    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   }
 }
