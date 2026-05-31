@@ -60,8 +60,8 @@ Open `http://localhost:4200`.
 task docker:up
 
 # Or manually (from project root)
-docker compose -f docker\docker-compose.yml build
-docker compose -f docker\docker-compose.yml up
+docker compose -f docker/docker-compose.yml -f docker/docker-compose-db.yml build
+docker compose -f docker/docker-compose.yml -f docker/docker-compose-db.yml up
 ```
 
 Open `http://localhost:3000`.
