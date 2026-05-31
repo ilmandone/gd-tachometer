@@ -1,0 +1,10 @@
+import { Component } from '@angular/core';
+import {NgOptimizedImage} from "@angular/common";
+
+@Component({
+  selector: 'app-alerts',
+  imports: [NgOptimizedImage],
+  templateUrl: './alerts.html',
+  styleUrl: './alerts.scss',
+})
+export class Alerts {}
