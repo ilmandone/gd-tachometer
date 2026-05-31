@@ -23,6 +23,7 @@
     left: 50%;
     transform: translate(-50%, 0);
     font-size: 1.25rem;
+
     @include f.getFF(600, -0.05rem);
   }
 
@@ -33,7 +34,8 @@
   .needle {
     transition: transform 150ms ease-out;
     pointer-events: none;
-    z-index: 1;
+
+    @include u.zIndex(needle)
   }
 
   // SVG indicator classes
@@ -49,7 +51,7 @@
 
   .cls-text {
     font-size: 1.25rem;
-    font-family: Inter, Arial-BoldMT, Arial;
+    font-family: Inter, Arial-BoldMT, Arial, sans-serif;
     font-weight: 700;
     letter-spacing: -0.05em;
   }
@@ -75,6 +77,8 @@
       font-size: 1.5rem;
     }
   }
+
+  // Alert elements
 }
 
 @keyframes shake {
