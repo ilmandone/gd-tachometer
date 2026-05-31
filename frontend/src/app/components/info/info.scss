@@ -23,22 +23,17 @@
 
     .current {
       font-size: 3.5rem;
-      @include f.getFF(700, -0.2rem);
+      @include f.getFF(800, -0.2rem);
     }
   }
 
   .icons {
     grid-area: icons;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
 
     display: flex;
     justify-content: flex-end;
-    column-gap: 0.5rem;
-
-    img {
-      width: 48px;
-      height: 48px;
-    }
+    column-gap: 0.125rem;
 
     img.bright {
       filter: brightness(5) saturate(6);
@@ -47,6 +42,8 @@
 
   .button-container {
     grid-area: button;
+
+    margin-top: 0.5rem;
 
     button {
       width: 100%;
@@ -60,7 +57,7 @@
   .legend {
     grid-area: legend;
 
-    margin-top: 1rem;
+    margin-top: 0.25rem;
     font-size: 0.875rem;
     @include f.getFF(600, -0.05rem);
 

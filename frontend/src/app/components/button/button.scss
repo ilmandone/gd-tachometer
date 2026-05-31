@@ -5,7 +5,7 @@
 :host {
   min-width: 4rem;
 
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 0.25rem;
 
   display: flex;
@@ -42,9 +42,11 @@
 
     @include f.getFF(600, -0.05rem);
 
-    &:hover {
-      color: #590e0e;
-      text-decoration: underline;
+    @include u.media('mouse') {
+      &:hover {
+        color: #590e0e;
+        text-decoration: underline;
+      }
     }
 
     &:active {
@@ -54,5 +56,9 @@
 
   &:focus-visible {
     @include fo.focusVisible;
+  }
+
+  @include u.media('mouse') {
+    padding: 0.75rem 1rem;
   }
 }
