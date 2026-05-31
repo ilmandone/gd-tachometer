@@ -58,18 +58,11 @@
 
 # IDEs and editors
 /**/.idea/
-/**/.project
-/**/.classpath
-/**/.c9/
-/**/*.launch
-/**/.settings/
-/**/*.sublime-workspace
 
 # Miscellaneous
 /**/.angular/cache
 /**/.sass-cache/
 /**/connect.lock
-/**/coverage
 /**/libpeerconnection.log
 /**/testem.log
 /**/typings
@@ -79,3 +72,5 @@
 /**/.DS_Store
 /**/Thumbs.db
 
+# Local beckup files
+.backup
