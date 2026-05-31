@@ -21,9 +21,17 @@ tasks:
       - docker compose -f ../docker/docker-compose-db.yml up -d
       - npm run start:dev
 
+  backend:stop:
+    desc: Stop the backend containers
+    dir: backend
+    cmds:
+      - docker compose -f ../docker/docker-compose-db.yml stop
+
   frontend:start:
     desc: Run the frontend in development mode (add "-- i" to install dependencies)
     dir: frontend
     cmds:
       - '{{if eq .CLI_ARGS "i"}}npm install{{end}}'
       - npm run start
+  
+  
