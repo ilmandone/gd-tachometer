@@ -24,10 +24,9 @@ $screen-sizes: map.remove($reference, "touch", "mouse", "pl");
 
 // Z-index
 $depth: (
-  'header': 100,
-  'dot': 150,
-  'scroller': 200,
-  'loader': 9999
+  needle: 150,
+  alert: 200,
+  modal: 9999
 );
 
 @mixin zIndex($value) {
