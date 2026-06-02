@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, HttpCode } from '@nestjs/common';
 import { CounterService } from './counter.service';
 import { CounterGateway } from './counter.gateway';
 import { DEFAULT_LIMIT } from './counter.utils';
+import { getDateString } from './counter.utils';
 
 class UpdateCounterDto {
   god!: number;
@@ -20,7 +21,7 @@ export class CounterController {
     const entry = await this.counterService.getToday();
     return (
       entry ?? {
-        date: new Date().toISOString().split('T')[0],
+        date: getDateString(process.env.COUNTER_TZ),
         dog: 0,
         god: 0,
         limit: DEFAULT_LIMIT,
