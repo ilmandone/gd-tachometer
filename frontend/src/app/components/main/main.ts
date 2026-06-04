@@ -1,4 +1,12 @@
-import { Component, computed, HostListener, inject, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  HostListener,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, Subject, switchMap, tap } from 'rxjs';
 import { CounterEntry, CounterService } from '../../services/counter.service';
@@ -30,6 +38,8 @@ export class Main {
     dog: this._createAudioElement('/sounds/dog.mp3'),
   };
 
+  private readonly _alarmSound: HTMLAudioElement = this._createAudioElement('/sounds/alarm.mp3')
+
   private readonly _flush$ = new Subject<void>();
 
   readonly current = computed(() => {
@@ -51,6 +61,12 @@ export class Main {
   };
 
   constructor() {
+
+    effect(() => {
+      const disabled = this.disabled()
+      if(disabled) void this._alarmSound.play()
+    })
+
     this._counterService
       .getToday()
       .pipe(takeUntilDestroyed())
