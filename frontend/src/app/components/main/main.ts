@@ -6,6 +6,7 @@ import { SocketService } from '../../services/socket.service';
 import { Info } from '../info/info';
 import { Tachometer } from '../tachometer/tachometer';
 import { ValueData, ValueType } from './main.utils';
+import { required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-main',
@@ -20,11 +21,11 @@ export class Main {
   private readonly _socketService = inject(SocketService);
 
   private _lastValue: ValueType = 'god';
-  private _tapCounter = 0;
   private _currentValue: ValueData = { god: 0, dog: 0 };
 
   private readonly _optimistic = signal(0);
   private readonly _serverData = signal<CounterEntry | undefined>(undefined);
+  private readonly _tapCounter = signal<number>(0)
 
   private readonly _sounds: Record<ValueType, HTMLAudioElement> = {
     god: this._createAudioElement('/sounds/god.mp3'),
@@ -37,12 +38,16 @@ export class Main {
     const server = this._serverData();
     return (server ? server.god + server.dog : 0) + this._optimistic();
   });
+
+  readonly disabled = computed(() =>
+    this._tapCounter() > this.TAP_COUNTER_MAX - 1
+  )
   readonly day = computed(() => this._serverData()?.date ?? '');
   readonly max = computed(() => this._serverData()?.limit ?? 100);
 
   readonly godBright = signal(false);
   readonly dogBright = signal(false);
-  readonly disabled = signal(false);
+
 
   // Must be declared after godBright/dogBright (field initializer order)
   private readonly _bright: Record<ValueType, WritableSignal<boolean>> = {
@@ -68,8 +73,7 @@ export class Main {
     this._flush$
       .pipe(
         tap(() => {
-          this._tapCounter += 1
-          if(this._tapCounter > this.TAP_COUNTER_MAX) this.disabled.set(true)
+          this._tapCounter.update(v => v + 1)
         }),
         debounceTime(this.INTERACTION_DEBOUNCE),
         switchMap(() => {
@@ -132,12 +136,11 @@ export class Main {
   private _playSound(audio: HTMLAudioElement): void {
     audio.pause();
     audio.currentTime = 0;
-    audio.play();
+    void audio.play();
   }
 
   private _reset () {
     this._currentValue = { god: 0, dog: 0 };
-    this._tapCounter = 0;
-    this.disabled.set(false)
+    this._tapCounter.set(0);
   }
 }
