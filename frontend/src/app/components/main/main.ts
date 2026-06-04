@@ -63,7 +63,6 @@ export class Main {
       .pipe(
         debounceTime(this.INTERACTION_DEBOUNCE),
         switchMap(() => {
-          const server = this._serverData();
           const payload = {
             god: this._newValue.god,
             dog: this._newValue.dog,
@@ -78,12 +77,6 @@ export class Main {
       });
   }
 
-  @HostListener('window:keydown.enter', ['$event'])
-  onKeyEnter(event: Event) {
-    if ((event as KeyboardEvent).repeat) return;
-    this.update();
-  }
-
   @HostListener('window:keydown.d', ['$event'])
   onKeyD(event: Event) {
     if ((event as KeyboardEvent).repeat) return;
@@ -96,8 +89,7 @@ export class Main {
     this.update('god');
   }
 
-  @HostListener('window:mouseup')
-  @HostListener('window:keyup.enter')
+
   @HostListener('window:keyup.d')
   @HostListener('window:keyup.g')
   onKeyUp() {
