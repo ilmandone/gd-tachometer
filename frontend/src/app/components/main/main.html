@@ -1,10 +1,11 @@
-<app-tachometer [current]="current()" [max]="max()"></app-tachometer>
+<app-tachometer [current]="current()" [max]="max()" [disabled]="disabled()  "></app-tachometer>
 
 <app-info
   [current]="current()"
   [day]="day()"
   [godIsBright]="godBright()"
   [dogIsBright]="dogBright()"
-  (keyup)="onKeyUp()"
-  (keydown)="update()"
+  [disabled]="disabled()"
+  (pointerIsUp)="onKeyUp()"
+  (pointerIsDown)="update()"
 ></app-info>

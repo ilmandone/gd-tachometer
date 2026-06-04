@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CounterEntry } from './counter.entity';
 import { Repository } from 'typeorm';
-import { DEFAULT_LIMIT, getDateString } from './counter.utils';
+import { DEFAULT_LIMIT, TAP_COUNTER_MAX, getDateString } from './counter.utils';
 
 @Injectable()
 export class CounterService {
@@ -54,8 +54,14 @@ export class CounterService {
     });
 
     if (entry) {
-      entry.god += god;
-      entry.dog += dog;
+      const limit = process.env.MAX_DOGS_AND_DOGS
+        ? Number(process.env.MAX_DOGS_AND_DOGS)
+        : TAP_COUNTER_MAX;
+
+      if (god + dog < limit) {
+        entry.god += god;
+        entry.dog += dog;
+      }
     } else {
       entry = this.counterRepository.create({ date: today, god, dog });
     }

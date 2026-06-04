@@ -4,15 +4,26 @@
 </div>
 
 <div class="icons">
-  <img [class.bright]="godIsBright()" ngSrc="/vectors/god.svg" alt="sun" width="72" height="72" />
-  <img [class.bright]="dogIsBright()" ngSrc="/vectors/dog.svg" alt="moon" width="72" height="72" />
+  @if(!disabled()) {
+    <img [ngSrc]="godIsBright() ? '/vectors/god-selected.svg' : '/vectors/god.svg'" alt="sun" width="72" height="72" />
+    <img [ngSrc]="dogIsBright() ? '/vectors/dog-selected.svg' :  '/vectors/dog.svg'" alt="moon" width="72" height="72" />
+  }
+  @else {
+    <img class="blinking" ngSrc="/vectors/god-dis.svg" alt="sun" width="72" height="72" />
+    <img class="blinking" ngSrc="/vectors/dog-dis.svg" alt="sun" width="72" height="72" />
+  }
+
 </div>
 
 <div class="button-container">
   <button
     app
-    (pointerdown)="keydown.emit()"
-    (pointerup)="keyup.emit()"
+    (pointerdown)="pointerIsDown.emit()"
+    (pointerup)="pointerIsUp.emit()"
+    (keydown.enter)="pointerIsDown.emit()"
+    (keydown.space)="pointerIsDown.emit()"
+    (keyup.enter)="pointerIsUp.emit()"
+    (keyup.space)="pointerIsUp.emit()"
   >
     <span class="plus">+</span>
   </button>

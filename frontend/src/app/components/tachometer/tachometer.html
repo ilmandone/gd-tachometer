@@ -1,5 +1,3 @@
-@let current_ = current();
-@let max_ = max();
 @let values_ = values();
 
 <img ngSrc="/vectors/small_ticks.svg" alt="tick" width="640" height="640" priority>
@@ -37,11 +35,13 @@
 
 <img
     class="needle"
-    [class.over-rpm]="current_ > max_"
+    [class.over-rpm]="overRpm()"
+    [class.disabled]="disabled()"
     ngSrc="/vectors/needle.svg"
-    [style.transform]="current_ <= max_ ? 'rotate(' + rotation() + 'deg)' : null"
+    [style.transform]="current() <= max() ? 'rotate(' + rotation() + 'deg)' : null"
     alt="needle"
     width="640"
     height="640">
 
 <span class="label">x10 GD/day</span>
+

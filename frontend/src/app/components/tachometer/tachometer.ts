@@ -14,8 +14,15 @@ const TOP_MARK_RATIO = 180 / GAUGE_ARC_DEG;
 export class Tachometer {
   readonly current = input.required<number>();
   readonly max = input.required<number>();
+  readonly disabled = input.required<boolean>();
+
+  readonly overRpm = computed(() => {
+    if (this.disabled()) return false;
+    return this.current() > this.max()
+  });
 
   readonly rotation = computed(() => {
+    if (this.disabled()) return 0;
     const max = this.max();
     if (max <= 0) return 0;
     return Math.round((this.current() / max) * GAUGE_ARC_DEG);
