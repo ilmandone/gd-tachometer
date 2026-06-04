@@ -34,10 +34,6 @@
     display: flex;
     justify-content: flex-end;
     column-gap: 0.125rem;
-
-    img.bright {
-      filter: brightness(5) saturate(6);
-    }
   }
 
   .button-container {
