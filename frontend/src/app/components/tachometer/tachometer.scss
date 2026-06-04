@@ -31,6 +31,10 @@
     animation: shake 80ms infinite;
   }
 
+  .disabled {
+    animation: disabledKF 220ms infinite;
+  }
+
   .needle {
     transition: transform 150ms ease-out;
     pointer-events: none;
@@ -96,5 +100,17 @@
   }
   100% {
     transform: rotate(216deg);
+  }
+}
+
+@keyframes disabledKF {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(216deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }
