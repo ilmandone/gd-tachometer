@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CounterEntry } from './counter.entity';
 import { Repository } from 'typeorm';
-import { DEFAULT_LIMIT, TAP_COUNTER_MAX, getDateString } from './counter.utils';
+import { DEFAULT_LIMIT, getDateString, TAP_COUNTER_MAX } from './counter.utils';
 
 @Injectable()
 export class CounterService {
@@ -26,20 +26,21 @@ export class CounterService {
       where: { date: today },
     });
     if (!exists) {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
+      let limit = DEFAULT_LIMIT;
 
-      const yesterdayString = yesterday.toISOString().split('T')[0];
-      const yesterdayEntry = await this.counterRepository.findOne({
-        where: { date: yesterdayString },
+      // Try to get the last day saved
+      const lastEntry = await this.counterRepository.findOne({
+        where: {},
+        order: { id: 'DESC' },
       });
 
-      const limitCandidate = yesterdayEntry
-        ? yesterdayEntry.god + yesterdayEntry.dog
-        : 0;
+      if (lastEntry) {
+        const sum = lastEntry.god + lastEntry.dog;
+        const limitCandidate = this.calculateLimitCandidate(sum);
+        console.log(limitCandidate);
 
-      const limit =
-        limitCandidate < DEFAULT_LIMIT ? DEFAULT_LIMIT : limitCandidate;
+        limit = limitCandidate < DEFAULT_LIMIT ? DEFAULT_LIMIT : limitCandidate;
+      }
 
       await this.counterRepository.save(
         this.counterRepository.create({ date: today, god: 0, dog: 0, limit }),
@@ -67,5 +68,47 @@ export class CounterService {
     }
 
     return this.counterRepository.save(entry);
+  }
+
+  /**
+   * This function return a number with 2 sig digits, divisible by 12
+   * and with a division result that also have 2 sig digits.
+   * @param sum
+   * @private
+   */
+  private calculateLimitCandidate(sum: number): number {
+    if (sum <= 0) return 0;
+
+    let bestL = 0;
+    let minDiff = Infinity;
+
+    // We look for M such that M has max 2 sig digits AND L = M * 12 has max 2 sig digits
+    // M = digits * 10^exp
+    for (let exp = -1; exp <= 6; exp++) {
+      const factor = Math.pow(10, exp);
+
+      for (let digits = 1; digits <= 99; digits++) {
+        const M = digits * factor;
+        const L = M * 12;
+
+        if (Number.isInteger(L) && this.hasMaxTwoSignificantDigits(L)) {
+          const diff = Math.abs(L - sum);
+          if (diff < minDiff) {
+            minDiff = diff;
+            bestL = L;
+          } else if (diff === minDiff && L > bestL) {
+            bestL = L;
+          }
+        }
+      }
+    }
+
+    return bestL;
+  }
+
+  private hasMaxTwoSignificantDigits(n: number): boolean {
+    if (n === 0) return true;
+    const s = Math.abs(n).toString().replace(/0+$/, '');
+    return s.length <= 2;
   }
 }
