@@ -12,7 +12,7 @@ export class CounterService {
   ) {}
 
   async getToday(): Promise<CounterEntry | null> {
-    const today = getDateString(process.env.COUNTER_TZ);
+    const today = getDateString();
     return this.counterRepository.findOne({ where: { date: today } });
   }
 
@@ -21,7 +21,7 @@ export class CounterService {
   }
 
   async initToday(): Promise<void> {
-    const today = getDateString(process.env.COUNTER_TZ);
+    const today = getDateString();
     const exists = await this.counterRepository.findOne({
       where: { date: today },
     });
@@ -29,7 +29,7 @@ export class CounterService {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
 
-      const yesterdayString = yesterday.toISOString().split('T')[0];
+      const yesterdayString = getDateString(yesterday);
       const yesterdayEntry = await this.counterRepository.findOne({
         where: { date: yesterdayString },
       });
@@ -48,7 +48,7 @@ export class CounterService {
   }
 
   async upsertToday(god: number, dog: number): Promise<CounterEntry> {
-    const today = getDateString(process.env.COUNTER_TZ);
+    const today = getDateString();
     let entry = await this.counterRepository.findOne({
       where: { date: today },
     });

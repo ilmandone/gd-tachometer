@@ -21,7 +21,7 @@ export class CounterController {
     const entry = await this.counterService.getToday();
     return (
       entry ?? {
-        date: getDateString(process.env.COUNTER_TZ),
+        date: getDateString(),
         dog: 0,
         god: 0,
         limit: DEFAULT_LIMIT,
