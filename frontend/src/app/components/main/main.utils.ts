@@ -1,4 +1,4 @@
-export const INTERACTION_DEBOUNCE = 400;
+export const INTERACTION_DEBOUNCE = 300;
 export const TAP_COUNTER_MAX = 60;
 
 export type ValueType = 'dog' | 'god';
