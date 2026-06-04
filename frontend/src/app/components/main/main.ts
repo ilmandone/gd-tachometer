@@ -1,11 +1,11 @@
 import { Component, computed, HostListener, inject, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, Subject, switchMap } from 'rxjs';
+import { debounceTime, Subject, switchMap, tap } from 'rxjs';
 import { CounterEntry, CounterService } from '../../services/counter.service';
 import { SocketService } from '../../services/socket.service';
 import { Info } from '../info/info';
 import { Tachometer } from '../tachometer/tachometer';
-import { ValueType } from './main.utils';
+import { ValueData, ValueType } from './main.utils';
 
 @Component({
   selector: 'app-main',
@@ -15,11 +15,14 @@ import { ValueType } from './main.utils';
 })
 export class Main {
   private readonly INTERACTION_DEBOUNCE = 400;
+  private readonly TAP_COUNTER_MAX = 10;
   private readonly _counterService = inject(CounterService);
   private readonly _socketService = inject(SocketService);
 
   private _lastValue: ValueType = 'god';
-  private _newValue: Record<ValueType, number> = { god: 0, dog: 0 };
+  private _tapCounter = 0;
+  private _currentValue: ValueData = { god: 0, dog: 0 };
+
   private readonly _optimistic = signal(0);
   private readonly _serverData = signal<CounterEntry | undefined>(undefined);
 
@@ -39,6 +42,7 @@ export class Main {
 
   readonly godBright = signal(false);
   readonly dogBright = signal(false);
+  readonly disabled = signal(false);
 
   // Must be declared after godBright/dogBright (field initializer order)
   private readonly _bright: Record<ValueType, WritableSignal<boolean>> = {
@@ -47,27 +51,32 @@ export class Main {
   };
 
   constructor() {
-    this._counterService.getToday()
+    this._counterService
+      .getToday()
       .pipe(takeUntilDestroyed())
       .subscribe((entry) => this._serverData.set(entry));
 
-    this._socketService.on<CounterEntry>('counter:updated')
+    this._socketService
+      .on<CounterEntry>('counter:updated')
       .pipe(takeUntilDestroyed())
       .subscribe((entry) => {
         this._serverData.set(entry);
         this._optimistic.set(0);
-        this._newValue = { god: 0, dog: 0 };
+        this._currentValue = { god: 0, dog: 0 };
       });
 
     this._flush$
       .pipe(
+        tap(() => {
+          this._tapCounter += 1
+          if(this._tapCounter > this.TAP_COUNTER_MAX) this.disabled.set(true)
+        }),
         debounceTime(this.INTERACTION_DEBOUNCE),
         switchMap(() => {
           const payload = {
-            god: this._newValue.god,
-            dog: this._newValue.dog,
+            ...this._currentValue
           };
-          this._newValue = { god: 0, dog: 0 };
+          this._reset()
           return this._counterService.update(payload.god, payload.dog);
         }),
         takeUntilDestroyed(),
@@ -89,7 +98,6 @@ export class Main {
     this.update('god');
   }
 
-
   @HostListener('window:keyup.d')
   @HostListener('window:keyup.g')
   onKeyUp() {
@@ -97,14 +105,18 @@ export class Main {
     this.dogBright.set(false);
   }
 
-  protected update(value?: ValueType) {
+  protected update(value?: ValueType, amount = 1) {
+    if(this.disabled()) return
+
     const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
     this._lastValue = next;
-    this._newValue[next] += 1;
-    this._optimistic.update((v) => v + 1);
-    this._flush$.next();
-    this._playSound(this._sounds[next]);
+    this._currentValue[next] += 1;
+    this._optimistic.update((v) => v + amount);
+
     this._bright[next].set(true);
+    this._playSound(this._sounds[next]);
+
+    this._flush$.next();
   }
 
   private _createAudioElement(src: string): HTMLAudioElement {
@@ -121,5 +133,11 @@ export class Main {
     audio.pause();
     audio.currentTime = 0;
     audio.play();
+  }
+
+  private _reset () {
+    this._currentValue = { god: 0, dog: 0 };
+    this._tapCounter = 0;
+    this.disabled.set(false)
   }
 }
