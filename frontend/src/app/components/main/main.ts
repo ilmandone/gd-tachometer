@@ -5,7 +5,7 @@ import { CounterEntry, CounterService } from '../../services/counter.service';
 import { SocketService } from '../../services/socket.service';
 import { Info } from '../info/info';
 import { Tachometer } from '../tachometer/tachometer';
-import { ValueData, ValueType } from './main.utils';
+import { INTERACTION_DEBOUNCE, TAP_COUNTER_MAX, ValueData, ValueType } from './main.utils';
 
 @Component({
   selector: 'app-main',
@@ -14,8 +14,7 @@ import { ValueData, ValueType } from './main.utils';
   styleUrl: './main.scss',
 })
 export class Main {
-  private readonly INTERACTION_DEBOUNCE = 400;
-  private readonly TAP_COUNTER_MAX = 10;
+
   private readonly _counterService = inject(CounterService);
   private readonly _socketService = inject(SocketService);
 
@@ -38,7 +37,7 @@ export class Main {
     return (server ? server.god + server.dog : 0) + this._optimistic();
   });
 
-  readonly disabled = computed(() => this._tapCounter() > this.TAP_COUNTER_MAX - 1);
+  readonly disabled = computed(() => this._tapCounter() > TAP_COUNTER_MAX - 1);
   readonly day = computed(() => this._serverData()?.date ?? '');
   readonly max = computed(() => this._serverData()?.limit ?? 100);
 
@@ -71,7 +70,7 @@ export class Main {
         tap(() => {
           this._tapCounter.update((v) => v + 1);
         }),
-        debounceTime(this.INTERACTION_DEBOUNCE),
+        debounceTime(INTERACTION_DEBOUNCE),
         switchMap(() => {
           const payload = {
             ...this._currentValue,
