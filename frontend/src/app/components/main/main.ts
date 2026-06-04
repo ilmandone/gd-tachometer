@@ -6,7 +6,6 @@ import { SocketService } from '../../services/socket.service';
 import { Info } from '../info/info';
 import { Tachometer } from '../tachometer/tachometer';
 import { ValueData, ValueType } from './main.utils';
-import { required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-main',
@@ -25,7 +24,7 @@ export class Main {
 
   private readonly _optimistic = signal(0);
   private readonly _serverData = signal<CounterEntry | undefined>(undefined);
-  private readonly _tapCounter = signal<number>(0)
+  private readonly _tapCounter = signal<number>(0);
 
   private readonly _sounds: Record<ValueType, HTMLAudioElement> = {
     god: this._createAudioElement('/sounds/god.mp3'),
@@ -39,15 +38,12 @@ export class Main {
     return (server ? server.god + server.dog : 0) + this._optimistic();
   });
 
-  readonly disabled = computed(() =>
-    this._tapCounter() > this.TAP_COUNTER_MAX - 1
-  )
+  readonly disabled = computed(() => this._tapCounter() > this.TAP_COUNTER_MAX - 1);
   readonly day = computed(() => this._serverData()?.date ?? '');
   readonly max = computed(() => this._serverData()?.limit ?? 100);
 
   readonly godBright = signal(false);
   readonly dogBright = signal(false);
-
 
   // Must be declared after godBright/dogBright (field initializer order)
   private readonly _bright: Record<ValueType, WritableSignal<boolean>> = {
@@ -73,14 +69,14 @@ export class Main {
     this._flush$
       .pipe(
         tap(() => {
-          this._tapCounter.update(v => v + 1)
+          this._tapCounter.update((v) => v + 1);
         }),
         debounceTime(this.INTERACTION_DEBOUNCE),
         switchMap(() => {
           const payload = {
-            ...this._currentValue
+            ...this._currentValue,
           };
-          this._reset()
+          this._reset();
           return this._counterService.update(payload.god, payload.dog);
         }),
         takeUntilDestroyed(),
@@ -110,7 +106,7 @@ export class Main {
   }
 
   protected update(value?: ValueType, amount = 1) {
-    if(this.disabled()) return
+    if (this.disabled()) return;
 
     const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
     this._lastValue = next;
@@ -139,7 +135,7 @@ export class Main {
     void audio.play();
   }
 
-  private _reset () {
+  private _reset() {
     this._currentValue = { god: 0, dog: 0 };
     this._tapCounter.set(0);
   }
