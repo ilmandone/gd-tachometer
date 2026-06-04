@@ -24,7 +24,7 @@ FROM node:22-alpine AS production
 WORKDIR /app
 
 # Install native deps (better-sqlite3 needs compilation), then clean build tools
-RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache python3 make g++ tzdata
 COPY backend/package*.json ./
 RUN npm ci --omit=dev && apk del python3 make g++
 
