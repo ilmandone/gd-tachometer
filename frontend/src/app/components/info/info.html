@@ -4,8 +4,15 @@
 </div>
 
 <div class="icons">
-  <img [ngSrc]="godIsBright() ? '/vectors/god-selected.svg' : '/vectors/god.svg'" alt="sun" width="72" height="72" />
-  <img [ngSrc]="dogIsBright() ? '/vectors/dog-selected.svg' :  '/vectors/dog.svg'" alt="moon" width="72" height="72" />
+  @if(!disabled()) {
+    <img [ngSrc]="godIsBright() ? '/vectors/god-selected.svg' : '/vectors/god.svg'" alt="sun" width="72" height="72" />
+    <img [ngSrc]="dogIsBright() ? '/vectors/dog-selected.svg' :  '/vectors/dog.svg'" alt="moon" width="72" height="72" />
+  }
+  @else {
+    <img class="blinking" ngSrc="/vectors/god-dis.svg" alt="sun" width="72" height="72" />
+    <img class="blinking" ngSrc="/vectors/dog-dis.svg" alt="sun" width="72" height="72" />
+  }
+
 </div>
 
 <div class="button-container">

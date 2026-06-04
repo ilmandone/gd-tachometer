@@ -108,6 +108,10 @@
       img {
         width: 84px;
         height: 84px;
+
+        &.blinking {
+          animation: blinkKF 150ms infinite;
+        }
       }
     }
 
@@ -119,4 +123,12 @@
       }
     }
   }
+}
+
+@keyframes blinkKF {
+  20% {opacity: 1;}
+  25% {opacity: 0;}
+  75% {opacity: 0;}
+  80% {opacity: 1;}
+
 }

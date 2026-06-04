@@ -13,6 +13,7 @@ export class Info {
   current = input.required<number >();
   godIsBright = input.required<boolean>();
   dogIsBright = input.required<boolean>();
+  disabled = input.required<boolean>()
 
   pointerIsDown = output<void>();
   pointerIsUp = output<void>();
