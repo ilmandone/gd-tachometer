@@ -54,7 +54,11 @@ export class CounterService {
     });
 
     if (entry) {
-      if (god + dog < TAP_COUNTER_MAX) {
+      const limit = process.env.MAX_DOGS_AND_DOGS
+        ? Number(process.env.MAX_DOGS_AND_DOGS)
+        : TAP_COUNTER_MAX;
+
+      if (god + dog < limit) {
         entry.god += god;
         entry.dog += dog;
       }
