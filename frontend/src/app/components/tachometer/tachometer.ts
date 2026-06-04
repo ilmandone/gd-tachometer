@@ -1,9 +1,9 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, Signal } from '@angular/core';
 
 const GAUGE_ARC_DEG = 216;
-const LEFT_MARK_RATIO = 90 / GAUGE_ARC_DEG;
-const TOP_MARK_RATIO = 180 / GAUGE_ARC_DEG;
+/*const LEFT_MARK_RATIO = 90 / GAUGE_ARC_DEG;
+const TOP_MARK_RATIO = 180 / GAUGE_ARC_DEG;*/
 
 @Component({
   selector: 'app-tachometer',
@@ -18,7 +18,7 @@ export class Tachometer {
 
   readonly overRpm = computed(() => {
     if (this.disabled()) return false;
-    return this.current() > this.max()
+    return this.current() > this.max();
   });
 
   readonly rotation = computed(() => {
@@ -28,15 +28,31 @@ export class Tachometer {
     return Math.round((this.current() / max) * GAUGE_ARC_DEG);
   });
 
-  readonly values = computed(() => {
+  readonly data: Signal<{
+    ticks: number[];
+    divider: number;
+  }> = computed(() => {
     const max = this.max();
-    if (max <= 0) return [0, 42, 84, 100];
-    const tick = max / 10;
-    return [
-      0,
-      Math.floor(tick * LEFT_MARK_RATIO),
-      Math.floor(tick * TOP_MARK_RATIO),
-      Math.floor(tick),
-    ];
+
+    if (max <= 0)
+      return {
+        ticks: [0, 42, 84, 100],
+        divider: 1,
+      };
+
+    const tick = max / 12;
+
+    const amountOfZeroDigits = Math.abs(tick).toString().replace(/[1-9]/g, '').length;
+    const divider = 10 ** amountOfZeroDigits;
+
+    return {
+      ticks: [
+        0,
+        Math.floor((tick * 5) / divider),
+        Math.floor((tick * 10) / divider),
+        max / divider,
+      ],
+      divider,
+    };
   });
 }
