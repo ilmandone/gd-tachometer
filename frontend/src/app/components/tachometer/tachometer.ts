@@ -1,6 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
-import { Alerts } from '../alerts/alerts';
 
 const GAUGE_ARC_DEG = 216;
 const LEFT_MARK_RATIO = 90 / GAUGE_ARC_DEG;
@@ -8,7 +7,7 @@ const TOP_MARK_RATIO = 180 / GAUGE_ARC_DEG;
 
 @Component({
   selector: 'app-tachometer',
-  imports: [NgOptimizedImage, Alerts],
+  imports: [NgOptimizedImage],
   templateUrl: './tachometer.html',
   styleUrl: './tachometer.scss',
 })
