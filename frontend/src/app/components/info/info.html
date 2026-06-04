@@ -11,8 +11,12 @@
 <div class="button-container">
   <button
     app
-    (pointerdown)="keydown.emit()"
-    (pointerup)="keyup.emit()"
+    (pointerdown)="pointerIsDown.emit()"
+    (pointerup)="pointerIsUp.emit()"
+    (keydown.enter)="pointerIsDown.emit()"
+    (keydown.space)="pointerIsDown.emit()"
+    (keyup.enter)="pointerIsUp.emit()"
+    (keyup.space)="pointerIsUp.emit()"
   >
     <span class="plus">+</span>
   </button>

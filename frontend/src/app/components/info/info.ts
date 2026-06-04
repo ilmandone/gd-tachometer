@@ -14,7 +14,7 @@ export class Info {
   godIsBright = input.required<boolean>();
   dogIsBright = input.required<boolean>();
 
-  keydown = output<void>();
-  keyup = output<void>();
+  pointerIsDown = output<void>();
+  pointerIsUp = output<void>();
 
 }
