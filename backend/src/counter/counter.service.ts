@@ -37,7 +37,6 @@ export class CounterService {
       if (lastEntry) {
         const sum = lastEntry.god + lastEntry.dog;
         const limitCandidate = this.calculateLimitCandidate(sum);
-        console.log(limitCandidate);
 
         limit = limitCandidate < DEFAULT_LIMIT ? DEFAULT_LIMIT : limitCandidate;
       }
