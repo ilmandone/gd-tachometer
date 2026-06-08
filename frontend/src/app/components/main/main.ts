@@ -38,7 +38,7 @@ export class Main {
     dog: this._createAudioElement('/sounds/dog.mp3'),
   };
 
-  private readonly _alarmSound: HTMLAudioElement = this._createAudioElement('/sounds/alarm.mp3')
+  private readonly _alarmSound: HTMLAudioElement = this._createAudioElement('/sounds/alarm.mp3');
 
   private readonly _flush$ = new Subject<void>();
 
@@ -101,21 +101,31 @@ export class Main {
       });
   }
 
-  @HostListener('window:keydown.d', ['$event'])
-  onKeyD(event: Event) {
-    if ((event as KeyboardEvent).repeat) return;
-    this.update('dog');
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: Event) {
+    const e = event as KeyboardEvent
+    const key = e.key.toLowerCase()
+
+    if(e.repeat || (key !== 'd' && key !== 'g')) return
+
+    const capsLock = e.getModifierState('CapsLock');
+    const isCapital = capsLock ? !e.shiftKey : e.shiftKey
+    console.log(isCapital);
+
+    this.update(key === 'd' ? 'dog' : 'god', isCapital ? 3 : 1);
   }
 
-  @HostListener('window:keydown.g', ['$event'])
-  onKeyG(event: Event) {
-    if ((event as KeyboardEvent).repeat) return;
-    this.update('god');
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event: Event) {
+    const e = event as KeyboardEvent;
+    const key = e.key.toLowerCase();
+
+    if (key !== 'd' && key !== 'g') return;
+
+    this.pointerUp()
   }
 
-  @HostListener('window:keyup.d')
-  @HostListener('window:keyup.g')
-  onKeyUp() {
+  protected pointerUp() {
     this.godBright.set(false);
     this.dogBright.set(false);
   }
@@ -125,7 +135,7 @@ export class Main {
 
     const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
     this._lastValue = next;
-    this._currentValue[next] += 1;
+    this._currentValue[next] += amount;
     this._optimistic.update((v) => v + amount);
 
     this._bright[next].set(true);
