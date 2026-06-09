@@ -40,7 +40,7 @@ export class Main {
 
   private readonly _alarmSound: HTMLAudioElement = this._createAudioElement('/sounds/alarm.mp3');
 
-  private readonly _flush$ = new Subject<void>();
+  private readonly _flush$ = new Subject<number>();
 
   readonly current = computed(() => {
     const server = this._serverData();
@@ -83,8 +83,8 @@ export class Main {
 
     this._flush$
       .pipe(
-        tap(() => {
-          this._tapCounter.update((v) => v + 1);
+        tap((amount) => {
+          this._tapCounter.update((v) => v + amount);
         }),
         debounceTime(INTERACTION_DEBOUNCE),
         switchMap(() => {
@@ -141,7 +141,7 @@ export class Main {
     this._bright[next].set(true);
     this._playSound(this._sounds[next]);
 
-    this._flush$.next();
+    this._flush$.next(amount);
   }
 
   private _createAudioElement(src: string): HTMLAudioElement {
