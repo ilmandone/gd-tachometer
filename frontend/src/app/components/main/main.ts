@@ -8,7 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, Subject, switchMap, tap } from 'rxjs';
+import { debounceTime, delayWhen, of, Subject, switchMap, tap, timer } from 'rxjs';
 import { CounterEntry, CounterService } from '../../services/counter.service';
 import { SocketService } from '../../services/socket.service';
 import { Info } from '../info/info';
@@ -22,7 +22,6 @@ import { INTERACTION_DEBOUNCE, TAP_COUNTER_MAX, ValueData, ValueType } from './m
   styleUrl: './main.scss',
 })
 export class Main {
-
   private readonly _counterService = inject(CounterService);
   private readonly _socketService = inject(SocketService);
 
@@ -61,11 +60,10 @@ export class Main {
   };
 
   constructor() {
-
     effect(() => {
-      const disabled = this.disabled()
-      if(disabled) void this._alarmSound.play()
-    })
+      const disabled = this.disabled();
+      if (disabled) void this._alarmSound.play();
+    });
 
     this._counterService
       .getToday()
@@ -87,7 +85,9 @@ export class Main {
           this._tapCounter.update((v) => v + amount);
         }),
         debounceTime(INTERACTION_DEBOUNCE),
+        delayWhen(() => (this.disabled() ? timer(2500) : of(0))),
         switchMap(() => {
+          console.log('FLUSH', this.disabled());
           const payload = {
             ...this._currentValue,
           };
@@ -103,13 +103,13 @@ export class Main {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: Event) {
-    const e = event as KeyboardEvent
-    const key = e.key.toLowerCase()
+    const e = event as KeyboardEvent;
+    const key = e.key.toLowerCase();
 
-    if(e.repeat || (key !== 'd' && key !== 'g')) return
+    if (e.repeat || (key !== 'd' && key !== 'g')) return;
 
     const capsLock = e.getModifierState('CapsLock');
-    const isCapital = capsLock ? !e.shiftKey : e.shiftKey
+    const isCapital = capsLock ? !e.shiftKey : e.shiftKey;
     console.log(isCapital);
 
     this.update(key === 'd' ? 'dog' : 'god', isCapital ? 3 : 1);
@@ -122,7 +122,7 @@ export class Main {
 
     if (key !== 'd' && key !== 'g') return;
 
-    this.pointerUp()
+    this.pointerUp();
   }
 
   protected pointerUp() {
