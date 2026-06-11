@@ -8,7 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, Subject, switchMap, tap } from 'rxjs';
+import { debounceTime, delayWhen, of, Subject, switchMap, tap, timer } from 'rxjs';
 import { CounterEntry, CounterService } from '../../services/counter.service';
 import { SocketService } from '../../services/socket.service';
 import { Info } from '../info/info';
@@ -22,7 +22,6 @@ import { INTERACTION_DEBOUNCE, TAP_COUNTER_MAX, ValueData, ValueType } from './m
   styleUrl: './main.scss',
 })
 export class Main {
-
   private readonly _counterService = inject(CounterService);
   private readonly _socketService = inject(SocketService);
 
@@ -38,9 +37,9 @@ export class Main {
     dog: this._createAudioElement('/sounds/dog.mp3'),
   };
 
-  private readonly _alarmSound: HTMLAudioElement = this._createAudioElement('/sounds/alarm.mp3')
+  private readonly _alarmSound: HTMLAudioElement = this._createAudioElement('/sounds/alarm.mp3');
 
-  private readonly _flush$ = new Subject<void>();
+  private readonly _flush$ = new Subject<number>();
 
   readonly current = computed(() => {
     const server = this._serverData();
@@ -61,11 +60,10 @@ export class Main {
   };
 
   constructor() {
-
     effect(() => {
-      const disabled = this.disabled()
-      if(disabled) void this._alarmSound.play()
-    })
+      const disabled = this.disabled();
+      if (disabled) void this._alarmSound.play();
+    });
 
     this._counterService
       .getToday()
@@ -83,11 +81,13 @@ export class Main {
 
     this._flush$
       .pipe(
-        tap(() => {
-          this._tapCounter.update((v) => v + 1);
+        tap((amount) => {
+          this._tapCounter.update((v) => v + amount);
         }),
         debounceTime(INTERACTION_DEBOUNCE),
+        delayWhen(() => (this.disabled() ? timer(2500) : of(0))),
         switchMap(() => {
+          console.log('FLUSH', this.disabled());
           const payload = {
             ...this._currentValue,
           };
@@ -101,21 +101,31 @@ export class Main {
       });
   }
 
-  @HostListener('window:keydown.d', ['$event'])
-  onKeyD(event: Event) {
-    if ((event as KeyboardEvent).repeat) return;
-    this.update('dog');
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: Event) {
+    const e = event as KeyboardEvent;
+    const key = e.key.toLowerCase();
+
+    if (e.repeat || (key !== 'd' && key !== 'g')) return;
+
+    const capsLock = e.getModifierState('CapsLock');
+    const isCapital = capsLock ? !e.shiftKey : e.shiftKey;
+    console.log(isCapital);
+
+    this.update(key === 'd' ? 'dog' : 'god', isCapital ? 3 : 1);
   }
 
-  @HostListener('window:keydown.g', ['$event'])
-  onKeyG(event: Event) {
-    if ((event as KeyboardEvent).repeat) return;
-    this.update('god');
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event: Event) {
+    const e = event as KeyboardEvent;
+    const key = e.key.toLowerCase();
+
+    if (key !== 'd' && key !== 'g') return;
+
+    this.pointerUp();
   }
 
-  @HostListener('window:keyup.d')
-  @HostListener('window:keyup.g')
-  onKeyUp() {
+  protected pointerUp() {
     this.godBright.set(false);
     this.dogBright.set(false);
   }
@@ -125,13 +135,13 @@ export class Main {
 
     const next = value ?? (this._lastValue === 'god' ? 'dog' : 'god');
     this._lastValue = next;
-    this._currentValue[next] += 1;
+    this._currentValue[next] += amount;
     this._optimistic.update((v) => v + amount);
 
     this._bright[next].set(true);
     this._playSound(this._sounds[next]);
 
-    this._flush$.next();
+    this._flush$.next(amount);
   }
 
   private _createAudioElement(src: string): HTMLAudioElement {
