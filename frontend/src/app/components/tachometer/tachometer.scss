@@ -17,6 +17,14 @@
     left: 0;
   }
 
+  .show-needle {
+    animation: delay65FadeInKF 200ms forwards;
+  }
+
+  .show-secondary {
+    animation: delay65FadeInKF 500ms forwards;
+  }
+
   .label {
     position: absolute;
     top: 24%;
@@ -40,6 +48,18 @@
     pointer-events: none;
 
     @include u.zIndex(needle)
+  }
+
+  .number-tick {
+    opacity: 0;
+    animation: simpleFadeInKF 75ms forwards;
+    animation-delay: calc(var(--i) * 150ms);
+  }
+
+  .rect-tick {
+    opacity: 0;
+    animation: simpleFadeInKF 50ms forwards;
+    animation-delay: calc(var(--i) * 25ms);
   }
 
   // SVG indicator classes
@@ -67,6 +87,8 @@
     text-anchor: end;
   }
 
+  // Responsive
+
   @include u.media('t') {
     .label {
       font-size: 1.5rem;
@@ -81,9 +103,9 @@
       font-size: 1.5rem;
     }
   }
-
-  // Alert elements
 }
+
+// Keyframes
 
 @keyframes shake {
   0% {
@@ -112,5 +134,36 @@
   }
   100% {
     transform: rotate(0deg);
+  }
+}
+
+@keyframes simpleFadeInKF {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes delayed50FadeInKF {
+  0%,
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes delay65FadeInKF {
+  0%,
+  65% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
