@@ -33,6 +33,16 @@ jobs:
       - name: Set short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
 
+      - name: Sanitize branch name for tag
+        run: |
+          # prefer GITHUB_REF_NAME when available, fall back to full ref
+          REF_NAME="${GITHUB_REF_NAME:-${GITHUB_REF}}"
+          # strip refs/heads/ prefix if present
+          REF_NAME=${REF_NAME#refs/heads/}
+          # lowercase, replace any non allowed characters with hyphen, trim hyphens
+          SAFE_REF=$(echo "$REF_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._-]+/-/g' | sed -E 's/^-+|-+$//g')
+          echo "CLEAN_REF_NAME=$SAFE_REF" >> $GITHUB_ENV
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -40,5 +50,5 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}-${{ env.SHORT_SHA }}
+            ghcr.io/${{ github.repository }}:${{ env.CLEAN_REF_NAME }}-${{ env.SHORT_SHA }}
             ghcr.io/${{ github.repository }}:latest
