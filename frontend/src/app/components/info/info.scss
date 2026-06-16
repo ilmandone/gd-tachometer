@@ -19,11 +19,19 @@
     .day {
       font-size: 1rem;
       @include f.getFF(600, -0.05rem);
+
+      &--show {
+        animation: slideDownKF 500ms forwards;
+      }
     }
 
     .current {
       font-size: 3.5rem;
       @include f.getFF(800, -0.2rem);
+
+      &--show {
+        animation: slideDownKF 300ms forwards;
+      }
     }
   }
 
@@ -34,12 +42,19 @@
     display: flex;
     justify-content: flex-end;
     column-gap: 0.125rem;
+
+    &--show {
+      animation: slideUpKF 1s forwards;
+    }
   }
 
   .button-container {
     grid-area: button;
-
     margin-top: 0.5rem;
+
+    &--show {
+      animation: slideUpKF 600ms forwards;
+    }
 
     button {
       width: 100%;
@@ -59,6 +74,10 @@
 
     &--desktop {
       display: none;
+    }
+
+    &--show {
+      animation: slideUpKF 1s forwards;
     }
 
     @include u.media('mouse') {
@@ -125,10 +144,52 @@
   }
 }
 
-@keyframes blinkKF {
-  20% {opacity: 1;}
-  25% {opacity: 0;}
-  75% {opacity: 0;}
-  80% {opacity: 1;}
+// Keyframes
 
+@keyframes blinkKF {
+  20% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDownKF {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpKF {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInKF {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
