@@ -1,5 +1,7 @@
 version: '3'
 
+dotenv: ['.env']
+
 tasks:
   docker:up:
     desc: Run the Docker container for GD Tachometer
@@ -34,4 +36,15 @@ tasks:
       - '{{if eq .CLI_ARGS "i"}}npm install{{end}}'
       - npm run start
   
-  
+  images:list:
+    desc: List all Docker images
+    silent: true
+    vars:
+      GHCR_TOKEN:
+        sh: echo -n '{{.ghcr_token}}' | base64
+      REPO: ilmandone/gd-tachometer
+      GHCR_OUTPUT:
+        sh: curl -H "Authorization{{":"}} Bearer {{.GHCR_TOKEN}}" https://ghcr.io/v2/{{.REPO}}/tags/list --no-progress-meter
+    cmds:
+      - echo "Show all available tags for the repository {{.REPO}}"
+      - jq '.tags[]' <<< '{{.GHCR_OUTPUT}}'
