@@ -1,0 +1,54 @@
+name: Publish Docker image
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**/*.md'
+      - 'taskfile.yml'
+      - 'TODO'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
+
+      - name: Sanitize branch name for tag
+        run: |
+          # prefer GITHUB_REF_NAME when available, fall back to full ref
+          REF_NAME="${GITHUB_REF_NAME:-${GITHUB_REF}}"
+          # strip refs/heads/ prefix if present
+          REF_NAME=${REF_NAME#refs/heads/}
+          # lowercase, replace any non allowed characters with hyphen, trim hyphens
+          SAFE_REF=$(echo "$REF_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9._-]+/-/g' | sed -E 's/^-+|-+$//g')
+          echo "CLEAN_REF_NAME=$SAFE_REF" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ env.CLEAN_REF_NAME }}-${{ env.SHORT_SHA }}
+            ghcr.io/${{ github.repository }}:latest
