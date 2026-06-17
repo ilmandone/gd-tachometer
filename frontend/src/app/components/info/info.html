@@ -1,21 +1,25 @@
-<div class="info">
-  <p class="day">{{ day() }}</p>
-  <p class="current">{{ current() }}</p>
-</div>
+@let day_ = day();
+@let current_ = current();
 
-<div class="icons">
-  @if(!disabled()) {
-    <img [ngSrc]="godIsBright() ? '/vectors/god-selected.svg' : '/vectors/god.svg'" alt="sun" width="72" height="72" />
-    <img [ngSrc]="dogIsBright() ? '/vectors/dog-selected.svg' :  '/vectors/dog.svg'" alt="moon" width="72" height="72" />
-  }
-  @else {
-    <img class="blinking" ngSrc="/vectors/god-dis.svg" alt="sun" width="72" height="72" />
-    <img class="blinking" ngSrc="/vectors/dog-dis.svg" alt="sun" width="72" height="72" />
-  }
+@if (day_ && current_ !== null) {
+  <div class="info">
+    <p class="day" animate.enter="day--show">{{ day_ }}</p>
+    <p class="current" animate.enter="current--show">{{ current_ }}</p>
+  </div>
 
-</div>
+  <div class="icons" animate.enter="icons--show">
+    @if (!disabled()) {
+      <img [ngSrc]="godIsBright() ? '/vectors/god-selected.svg' : '/vectors/god.svg'" alt="sun" width="72" height="72"/>
+      <img [ngSrc]="dogIsBright() ? '/vectors/dog-selected.svg' :  '/vectors/dog.svg'" alt="moon" width="72"
+           height="72"/>
+    } @else {
+      <img class="blinking" ngSrc="/vectors/god-dis.svg" alt="sun" width="72" height="72"/>
+      <img class="blinking" ngSrc="/vectors/dog-dis.svg" alt="sun" width="72" height="72"/>
+    }
+  </div>
 
-<div class="button-container">
+
+<div class="button-container" animate.enter="button-container--show">
   <button
     app
     (pointerdown)="pointerIsDown.emit()"
@@ -29,14 +33,16 @@
   </button>
 </div>
 
-<div class="legend">
+<div class="legend" animate.enter="legend--show">
   <p class="legend--desktop">
-    Press the button or ENTER key to add a random G or D.
+    Press the button to add a random G or D.
     Use G or D to be more specific.
   </p>
   <p class="legend--mobile">
     Press the button to add a random G or D
   </p>
 </div>
+
+}
 
 
